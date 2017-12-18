@@ -48,3 +48,19 @@ alias gilcat='adb logcat | grep GilLog'
 # Get info from connected device
 alias droid-api='adb shell getprop ro.build.version.release'
 alias droid-sdk='adb shell getprop ro.build.version.sdk'
+
+export ANDROID_LOCAL_PROPS_BKP_FILE="$HOME/workspace/scripts/android/android_local_properties/local.properties"
+
+function devdroid_save_local_properties()
+{
+    echo 'Saving file '$1' as default local.properties'
+    cp $1 $ANDROID_LOCAL_PROPS_BKP_FILE
+}
+
+function devdroid_write_local_properties()
+{
+    cp $ANDROID_LOCAL_PROPS_BKP_FILE $1
+}
+
+alias devdroid_show_all_local_properties='f "local.properties"'
+
