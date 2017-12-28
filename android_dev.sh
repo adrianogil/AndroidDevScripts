@@ -13,6 +13,56 @@ function ik()
     fi
 }
 
+function get_package_name_from_apk()
+{
+     $ANDROID_SDK/build-tools/26.0.2/aapt dump badging $1 | grep package | awk '{print $2}' | sed s/name=//g | sed s/\'//g
+}
+
+# Uninstall android app
+function u()
+{
+    echo 'Searching for APK info ...'
+
+    apk_file=$(find . -name '*.apk' | head -1)
+
+    if [ -z $apk_file ]; then
+        echo 'No APK Found!'
+    else
+        echo 'Found '$apk_file
+        echo ' '
+
+        package_name=$(get_package_name_from_apk $apk_file)
+
+        echo 'Uninstalling '$package_name
+        adb uninstall $package_name
+    fi
+}
+
+# Launch Application from package name
+function launch_package()
+{
+    adb shell monkey -p $1 -c android.intent.category.LAUNCHER 1
+}
+
+# Install and launch Android APK
+function ikl()
+{
+    echo 'Searching for APK files ...'
+
+    apk_file=$(find . -name '*.apk' | head -1)
+
+    if [ -z $apk_file ]; then
+        echo 'No APK Found!'
+    else
+        echo 'Found '$apk_file
+        adb install -r $apk_file
+        package_name=$(get_package_name_from_apk $apk_file)
+        echo 'Installed '$package_name
+        echo 'Launching Application...'
+        launch_package $package_name
+    fi
+}
+
 # Android logcat
 function dlog()
 {
@@ -44,10 +94,12 @@ alias getlog='ls -t log_*.txt | head -1'
 alias catlog='ls -t log_*.txt | head -1 | xargs -I {} cat {}'
 alias openlog='ls -t log_*.txt | head -1 | xargs -I {} sublime {}'
 alias gilcat='adb logcat | grep GilLog'
+alias gillog='ls -t log_*.txt | head -1 | xargs -I {} cat {} | grep "GilLog" | less'
 
 # Get info from connected device
 alias droid-api='adb shell getprop ro.build.version.release'
 alias droid-sdk='adb shell getprop ro.build.version.sdk'
+alias droid-devicemodel='adb shell getprop ro.product.model'
 
 export ANDROID_LOCAL_PROPS_BKP_FILE="$HOME/workspace/scripts/android/android_local_properties/local.properties"
 
@@ -63,4 +115,3 @@ function devdroid_write_local_properties()
 }
 
 alias devdroid_show_all_local_properties='f "local.properties"'
-
