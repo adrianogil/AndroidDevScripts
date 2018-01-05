@@ -66,9 +66,14 @@ function ikl()
 # Android logcat
 function dlog()
 {
+    if [ -z $1 ]; then
+        log_sufix=""
+    else
+        log_sufix="_"$1
+    fi
     device_model=$(adb shell getprop ro.product.model)
     echo "Device is $device_model"
-    log_file=log_${device_model}_$(date +%F-%H:%M).txt
+    log_file=log_${device_model}_$(date +%F-%H:%M)$log_sufix.txt
     echo 'Android log saved as '$log_file
     adb shell logcat -d -v time > $log_file
     number_of_lines=$(cat $log_file | wc -l)
@@ -92,7 +97,7 @@ function logexception()
 # Cat last logcat saved by dlog
 alias getlog='ls -t log_*.txt | head -1'
 alias catlog='ls -t log_*.txt | head -1 | xargs -I {} cat {}'
-alias openlog='ls -t log_*.txt | head -1 | xargs -I {} sublime {}'
+alias openlog='ls -t log_*.txt | head -1 | xargs -I {} sublime -n {}'
 alias gilcat='adb logcat | grep GilLog'
 alias gillog='ls -t log_*.txt | head -1 | xargs -I {} cat {} | grep "GilLog" | less'
 
@@ -100,6 +105,7 @@ alias gillog='ls -t log_*.txt | head -1 | xargs -I {} cat {} | grep "GilLog" | l
 alias droid-api='adb shell getprop ro.build.version.release'
 alias droid-sdk='adb shell getprop ro.build.version.sdk'
 alias droid-devicemodel='adb shell getprop ro.product.model'
+alias droid-displaystate='adb shell dumpsys power | grep "Display Power: state=" | cut -c22-'
 
 export ANDROID_LOCAL_PROPS_BKP_FILE="$HOME/workspace/scripts/android/android_local_properties/local.properties"
 
