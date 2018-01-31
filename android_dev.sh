@@ -38,6 +38,11 @@ function u()
     fi
 }
 
+function launch_from_apk()
+{
+    launch_package $(get_package_name_from_apk $1)
+}
+
 # Launch Application from package name
 function launch_package()
 {
@@ -106,6 +111,10 @@ alias droid-api='adb shell getprop ro.build.version.release'
 alias droid-sdk='adb shell getprop ro.build.version.sdk'
 alias droid-devicemodel='adb shell getprop ro.product.model'
 alias droid-displaystate='adb shell dumpsys power | grep "Display Power: state=" | cut -c22-'
+alias droid-kernelversion='adb shell cat /proc/version'
+
+alias droid-get-pkgname-from-pid='adb shell ps | grep '
+alias droid-installed_apps="adb shell 'pm list packages -f' | sed -e 's/.*=//' | sort"
 
 export ANDROID_LOCAL_PROPS_BKP_FILE="$HOME/workspace/scripts/android/android_local_properties/local.properties"
 
