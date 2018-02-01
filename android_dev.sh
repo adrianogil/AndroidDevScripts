@@ -40,7 +40,18 @@ function u()
 
 function launch_from_apk()
 {
-    launch_package $(get_package_name_from_apk $1)
+    apk_file=$1
+    if [ -z $apk_file ]; then
+        apk_file=$(find . -name '*.apk' | head -1)
+    fi
+
+    echo "Let's launch Activity from "$apk_file
+
+    pkg_name=$(get_package_name_from_apk $apk_file)
+
+    echo "Package "$pkg_name
+
+    launch_package $pkg_name
 }
 
 # Launch Application from package name
@@ -105,6 +116,7 @@ alias catlog='ls -t log_*.txt | head -1 | xargs -I {} cat {}'
 alias openlog='ls -t log_*.txt | head -1 | xargs -I {} sublime -n {}'
 alias gilcat='adb logcat | grep GilLog'
 alias gillog='ls -t log_*.txt | head -1 | xargs -I {} cat {} | grep "GilLog" | less'
+alias clrcat='echo "Clearing logs from Android device "$(adb shell getprop ro.product.model) && adb logcat -c'
 
 # Get info from connected device
 alias droid-api='adb shell getprop ro.build.version.release'
