@@ -122,11 +122,37 @@ alias clrcat='echo "Clearing logs from Android device "$(adb shell getprop ro.pr
 alias droid-api='adb shell getprop ro.build.version.release'
 alias droid-sdk='adb shell getprop ro.build.version.sdk'
 alias droid-devicemodel='adb shell getprop ro.product.model'
-alias droid-displaystate='adb shell dumpsys power | grep "Display Power: state=" | cut -c22-'
+alias droid-display-power-state='adb shell dumpsys power | grep "Display Power: state=" | cut -c22-'
 alias droid-kernelversion='adb shell cat /proc/version'
 
 alias droid-get-pkgname-from-pid='adb shell ps | grep '
 alias droid-installed_apps="adb shell 'pm list packages -f' | sed -e 's/.*=//' | sort"
+
+alias droid-get-focused-pkg="adb shell dumpsys activity activities | grep mFocusedActivity"
+
+alias droid-force-stop-pkg="adb shell am force-stop "
+
+alias droid-get-notifications="adb shell dumpsys notification | less"
+
+alias droid-open-url='adb shell am start -a "android.intent.action.VIEW" -d '
+
+alias droid-record-video-from-screen='video_dir=/sdcard/test.mp4 && echo "Saving video to "$video_dir && adb shell screenrecord $video_dir'
+
+alias droid-list-all-installed-apks='adb shell dumpsys activity activities | grep apk | less'
+
+alias droid-get-ipaddress-wlan='adb shell ip route | awk "{print $9}"'
+
+function droid-cpuinfo-pkg()
+{
+    pkg=$1
+    adb shell dumpsys cpuinfo | grep $1
+}
+
+function droid-open-settings-pgk()
+{
+    pgk=$1
+    adb shell am start -a android.settings.APPLICATION_DETAILS_SETTINGS -d package:$1
+}
 
 export ANDROID_LOCAL_PROPS_BKP_FILE="$HOME/workspace/scripts/android/android_local_properties/local.properties"
 
