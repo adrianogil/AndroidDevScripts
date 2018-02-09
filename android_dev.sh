@@ -140,7 +140,13 @@ alias droid-record-video-from-screen='video_dir=/sdcard/test.mp4 && echo "Saving
 
 alias droid-list-all-installed-apks='adb shell dumpsys activity activities | grep apk | less'
 
-alias droid-get-ipaddress-wlan='adb shell ip route | awk "{print $9}"'
+alias droid-get-ipaddress-wlan='python2 '$ANDROID_DEV_SCRIPTS_DIR'/python/net/wlanip.py'
+
+function devdroid-sshtermux-into-device()
+{
+    device_ip=$(python2 $ANDROID_DEV_SCRIPTS_DIR/python/net/wlanip.py)
+    ssh $device_ip -p 7375
+}
 
 function droid-cpuinfo-pkg()
 {

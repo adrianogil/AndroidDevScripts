@@ -19,3 +19,19 @@ function findosig
 
     cp $OSIG_FOLDER/oculussig_$devicename $target_directory
 }
+
+function copyallosig()
+{
+    if [ -z "$1" ]
+    then
+        target_directory='.'
+    else
+        target_directory=$1
+    fi
+
+    cp $OSIG_FOLDER/* $target_directory
+}
+
+# OVR Metrics Tools
+# https://developer.oculus.com/downloads/package/ovr-metrics-tool/
+alias ovr-install-metrics-tools='adb install -r '$HOME'/Downloads/OVRMetricsTool/OVRMetricsTool.apk'
