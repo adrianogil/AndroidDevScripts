@@ -142,10 +142,16 @@ alias droid-list-all-installed-apks='adb shell dumpsys activity activities | gre
 
 alias droid-get-ipaddress-wlan='python2 '$ANDROID_DEV_SCRIPTS_DIR'/python/net/wlanip.py'
 
-function devdroid-sshtermux-into-device()
+function devdroid_sshtermux_into_device()
 {
+    if [ -z $1 ]; then
+        ssh_port=7375
+    else
+        ssh_port=$1
+    fi
+
     device_ip=$(python2 $ANDROID_DEV_SCRIPTS_DIR/python/net/wlanip.py)
-    ssh $device_ip -p 7375
+    ssh $device_ip -p $ssh_port
 }
 
 function droid-cpuinfo-pkg()
