@@ -19,7 +19,7 @@ function get_package_name_from_apk()
 }
 
 # Uninstall android app
-function u()
+function uk()
 {
     echo 'Searching for APK info ...'
 
