@@ -142,6 +142,12 @@ alias droid-list-all-installed-apks='adb shell dumpsys activity activities | gre
 
 alias droid-get-ipaddress-wlan='python2 '$ANDROID_DEV_SCRIPTS_DIR'/python/net/wlanip.py'
 
+function devdroid-connect-wifi()
+{
+    adb tcpip 5555
+    adb connect $(droid-get-ipaddress-wlan)
+}
+
 function devdroid_sshtermux_into_device()
 {
     if [ -z $1 ]; then
