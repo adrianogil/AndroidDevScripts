@@ -160,6 +160,14 @@ function devdroid_sshtermux_into_device()
     ssh $device_ip -p $ssh_port
 }
 
+function uninstall_apk_with_packagename()
+{
+    installed_apps=$(adb shell 'pm list packages -f' | sed -e 's/.*=//' | sort)
+    # echo 'Found APKs:'
+    # # echo $(echo $installed_apps | grep $1)
+    echo -n $installed_apps | grep $1 | xa adb uninstall {}
+}
+
 function droid-cpuinfo-pkg()
 {
     pkg=$1
