@@ -142,6 +142,8 @@ alias droid-list-all-installed-apks='adb shell dumpsys activity activities | gre
 
 alias droid-get-ipaddress-wlan='python2 '$ANDROID_DEV_SCRIPTS_DIR'/python/net/wlanip.py'
 
+alias droid-get-processor-arch='adb shell getprop ro.product.cpu.abi'
+
 function devdroid-connect-wifi()
 {
     adb tcpip 5555
@@ -158,6 +160,19 @@ function devdroid_sshtermux_into_device()
 
     device_ip=$(python2 $ANDROID_DEV_SCRIPTS_DIR/python/net/wlanip.py)
     ssh $device_ip -p $ssh_port
+}
+
+function devdroid_usbsshtermux_into_device()
+{
+    if [ -z $1 ]; then
+        ssh_port=7375
+    else
+        ssh_port=$1
+    fi
+
+    adb forward tcp:$ssh_port tcp:$ssh_port
+    adb forward tcp:8080 tcp:8080
+    ssh localhost -p $ssh_port
 }
 
 function uninstall_apk_with_packagename()
