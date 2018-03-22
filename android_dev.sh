@@ -1,3 +1,4 @@
+
 # Install Android APK
 function ik()
 {
@@ -11,6 +12,19 @@ function ik()
         echo 'Found '$apk_file
         adb install -r $apk_file
     fi
+}
+
+# Install Android APK
+function ikc()
+{
+    apk_file=$1
+    echo "Installing APK "$apk_file
+    adb install -r $apk_file
+    echo "Clear logcat"
+    adb logcat -c
+    echo "Launch Activity from APK "$apk_file
+    launch_from_apk $apk_file
+
 }
 
 function get_package_name_from_apk()
