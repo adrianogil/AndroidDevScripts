@@ -19,7 +19,9 @@ function ikc()
 {
     apk_file=$1
     apk_date=$(date -r $apk_file)
-    echo "Installing APK "$apk_file" built at "$apk_date
+    echo "Installing APK "$apk_file
+    echo " -> build size: "$(du -sh $apk_file | awk '{print $1}')
+    echo " -> build time: "$apk_date
     adb install -r $apk_file
     echo "Clear logcat"
     adb logcat -c
