@@ -115,7 +115,7 @@ function dlog()
     fi
     device_model=$(adb shell getprop ro.product.model)
     echo "Device is $device_model"
-    log_file=log_${device_model}_$(date +%F-%H:%M)$log_sufix.txt
+    log_file=log_${device_model}_$(date +%F-%H-%M)$log_sufix.txt
     echo 'Android log saved as '$log_file
     adb shell logcat -d -v time > $log_file
     number_of_lines=$(cat $log_file | wc -l)
@@ -123,7 +123,13 @@ function dlog()
 }
 
 function logtext() {
-    ls -t log_*.txt | head -1 | xargs -I {} cat {} | grep $1 | less
+    if [ -z $2 ]; then
+        log_file=$(ls -t log_*.txt | head -1)
+    else
+        log_file=$(ls -t log_*.txt | grep $2 | head -1)
+    fi
+
+    cat $log_file | grep $1 | less
 }
 
 function catexception()
