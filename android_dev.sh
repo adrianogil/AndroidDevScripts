@@ -17,6 +17,13 @@ function ik()
 # Install Android APK
 function ikc()
 {
+    # if [ -z $apk_file ]; then
+    #     echo 'No APK Found!'
+    # else
+    #     echo 'Found '$apk_file
+    #     adb install -r $apk_file
+    # fi
+
     apk_file=$1
     apk_date=$(date -r $apk_file)
     echo "Installing APK "$apk_file
@@ -122,6 +129,27 @@ function logtext() {
 function catexception()
 {
     ls -t log_*.txt | head -1 | xargs -I {} cat {} | python ${ANDROID_DEV_SCRIPTS_DIR}/python/log/error_log_filter.py
+}
+
+
+function logunitypid()
+{
+    log_path=$(ls -t log_*.txt | head -1)
+    python ${ANDROID_DEV_SCRIPTS_DIR}/python/log/logunitypid.py "$PWD/$log_path"
+}
+
+function logunity()
+{
+    unitypid=$(logunitypid)
+
+    logtext $unitypid
+}
+
+function logunityexception()
+{
+    unitypid=$(logunitypid)
+
+    catexception | grep $unitypid | less
 }
 
 function logexception()
