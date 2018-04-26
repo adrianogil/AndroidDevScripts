@@ -8,7 +8,27 @@ Save logcat in current directory
 dlog [<log_sufix_name>]
 ```
 
+Show logs from an Unity application
+```
+logunity
+```
+
+Show exceptions from an Unity application
+```
+logunityexception
+```
+
+Get process id of an Unity application
+```
+logunitypid
+```
+
 ## Planned features
+- List logs generated in a specific date in current log directory
+```
+dlog-tool -l <search-string>
+dlog-tool -l --today
+```
 - Smarter log tools
 
 ## Installation
