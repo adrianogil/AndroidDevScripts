@@ -8,6 +8,11 @@ Save logcat in current directory
 dlog [<log_sufix_name>]
 ```
 
+Search for a string in last saved logcat in current directory
+```
+logtext <string>
+```
+
 Show logs from an Unity application
 ```
 logunity
@@ -21,7 +26,6 @@ logunityexception
 Get process id of an Unity application
 ```
 logunitypid
-```
 
 ## Planned features
 - List logs generated in a specific date in current log directory
