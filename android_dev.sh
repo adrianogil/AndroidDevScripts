@@ -124,6 +124,16 @@ function dlog()
     echo ''$number_of_lines' lines'
 }
 
+function catlog() {
+    if [ -z $2 ]; then
+        log_file=$(ls -t log_*.txt | head -1)
+    else
+        log_file=$(ls -t log_*.txt | grep $2 | head -1)
+    fi
+
+    cat $log_file
+}
+
 function logtext() {
     if [ -z $2 ]; then
         log_file=$(ls -t log_*.txt | head -1)
@@ -144,6 +154,13 @@ function logunitypid()
 {
     log_path=$(ls -t log_*.txt | head -1)
     python ${ANDROID_DEV_SCRIPTS_DIR}/python/log/logunitypid.py "$PWD/$log_path"
+}
+
+function catunity()
+{
+    unitypid=$(logunitypid)
+
+    catlog | grep $unitypid
 }
 
 function logunity()
@@ -167,7 +184,6 @@ function logexception()
 
 # Cat last logcat saved by dlog
 alias getlog='ls -t log_*.txt | head -1'
-alias catlog='ls -t log_*.txt | head -1 | xargs -I {} cat {}'
 alias openlog='ls -t log_*.txt | head -1 | xargs -I {} sublime -n {}'
 alias gilcat='adb logcat | grep GilLog'
 alias gillog='ls -t log_*.txt | head -1 | xargs -I {} cat {} | grep "GilLog" | less'
