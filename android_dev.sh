@@ -17,16 +17,18 @@ function ik()
 # Install Android APK
 function ikc()
 {
-    # if [ -z $apk_file ]; then
-    #     echo 'No APK Found!'
-    # else
-    #     echo 'Found '$apk_file
-    #     adb install -r $apk_file
-    # fi
+    if [ -z $1 ]; then
+        if hash gfind 2>/dev/null; then
+            apk_file=$(gfind . -name '*.apk' -type f -printf "%-.22T+ %M %n %-8u %-8g %8s %Tx %.8TX %p\n" | sort | cut -c86- | tail -1)
+        else
+            apk_file=$(find . -name '*.apk' | head -1)
+        fi
+    else
+        apk_file=$1
+    fi
 
-    apk_file=$1
-    apk_date=$(date -r $apk_file)
     echo "Installing APK "$apk_file
+    apk_date=$(date -r $apk_file)
     echo " -> build size: "$(du -sh $apk_file | awk '{print $1}')
     echo " -> build time: "$apk_date
     adb install -r $apk_file
