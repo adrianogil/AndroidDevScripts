@@ -216,6 +216,14 @@ alias droid-get-ipaddress-wlan='python2 '$ANDROID_DEV_SCRIPTS_DIR'/python/net/wl
 
 alias droid-get-processor-arch='adb shell getprop ro.product.cpu.abi'
 
+function droid-get-screenshot()
+{
+    adb shell screencap -p /sdcard/screen.png
+    adb pull /sdcard/screen.png
+    adb shell rm /sdcard/screen.png
+    mv screen.png screenshot_$(date +%F-%H:%M).png
+}
+
 function devdroid-connect-wifi()
 {
     adb tcpip 5555
