@@ -26,8 +26,8 @@ function ikc()
     else
         apk_file=$1
     fi
-
-    echo "Installing APK "$apk_file
+    device_model=$(adb shell getprop ro.product.model)
+    echo "Installing APK "$apk_file" in device "$device_model
     apk_date=$(date -r $apk_file)
     echo " -> build size: "$(du -sh $apk_file | awk '{print $1}')
     echo " -> build time: "$apk_date
