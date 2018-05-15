@@ -31,6 +31,12 @@ function ikc()
     apk_date=$(date -r $apk_file)
     echo " -> build size: "$(du -sh $apk_file | awk '{print $1}')
     echo " -> build time: "$apk_date
+    if [ -z ${ANDROID_IKC_LAST_BUILD_TIME+x} ]; then
+        echo ""
+    else
+        echo "Last build time was "$ANDROID_IKC_LAST_BUILD_TIME
+    fi
+    export ANDROID_IKC_LAST_BUILD_TIME=$apk_date
     adb install -r $apk_file
     echo "Clear logcat"
     adb logcat -c
