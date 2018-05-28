@@ -196,6 +196,8 @@ alias gillog='ls -t log_*.txt | head -1 | xargs -I {} cat {} | grep "GilLog" | l
 alias clrcat='echo "Clearing logs from Android device "$(adb shell getprop ro.product.model) && adb logcat -c'
 alias augcat='echo "Augment logcat buffer to 64M (Android device "$(adb shell getprop ro.product.model)")" && adb logcat -G 64M'
 
+alias droid-install='adb install'
+
 # Get info from connected device
 alias droid-api='adb shell getprop ro.build.version.release'
 alias droid-sdk='adb shell getprop ro.build.version.sdk'
