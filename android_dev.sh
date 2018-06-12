@@ -230,7 +230,9 @@ function augcat()
     fi
 }
 
-alias droid-install='adb install'
+alias droid-apk-install='adb install'
+alias droid-app-clear-data='adb shell pm clear'
+alias droid-app-path='adb shell pm path'
 
 # Get info from connected device
 alias droid-api='adb shell getprop ro.build.version.release'
