@@ -19,7 +19,7 @@ function ikc()
 {
     if [ -z $1 ]; then
         if hash gfind 2>/dev/null; then
-            apk_file=$(gfind . -name '*.apk' -type f -printf "%-.22T+ %M %n %-8u %-8g %8s %Tx %.8TX %p\n" | sort | cut -c86- | tail -1)
+            apk_file=$(gfind . -name '*.apk' -type f -printf "%-.22T+ %M %n %-8u %-8g %8s %Tx %.8TX %p\n" | sort | cut -c87- | tail -1)
         else
             apk_file=$(find . -name '*.apk' | head -1)
         fi
@@ -294,6 +294,24 @@ function devdroid_save_local_properties()
 function devdroid_write_local_properties()
 {
     cp $ANDROID_LOCAL_PROPS_BKP_FILE $1
+}
+
+function devdroid_keystore_info()
+{
+    if [ -z $1 ]; then
+        keystore_file=$(find . -name '*.keystore' | head -1 | rev | cut -c1- | rev )
+        echo "Found keystore "$keystore_file
+
+        keytool -v -list -keystore "$keystore_file"
+    else
+        if [ -z $2 ]; then
+            keytool -list -keystore $1 -alias $2
+        else
+            keytool -v -list -keystore $1
+        fi
+    fi
+
+    keytool -list -keystore .keystore -alias foo
 }
 
 alias devdroid_show_all_local_properties='f "local.properties"'
