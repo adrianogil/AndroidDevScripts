@@ -29,6 +29,8 @@ function ikc()
     device_model=$(adb shell getprop ro.product.model)
     echo "Installing APK "$apk_file" in device "$device_model
     apk_date=$(date -r $apk_file)
+    package_name=$(get_package_name_from_apk $apk_file)
+    echo " -> package name: "$package_name
     echo " -> build size: "$(du -sh $apk_file | awk '{print $1}')
     echo " -> build time: "$apk_date
     if [ -z ${ANDROID_IKC_LAST_BUILD_TIME+x} ]; then
@@ -49,7 +51,8 @@ function ikc()
 
 function get_package_name_from_apk()
 {
-     $ANDROID_SDK/build-tools/26.0.2/aapt dump badging $1 | grep package | awk '{print $2}' | sed s/name=//g | sed s/\'//g
+    aapt_tool=$(find $ANDROID_SDK/ -name 'aapt' | tail -1)
+    $aapt_tool dump badging $1 | grep package | awk '{print $2}' | sed s/name=//g | sed s/\'//g
 }
 
 # Uninstall android app
