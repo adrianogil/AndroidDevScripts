@@ -124,13 +124,19 @@ function dlog()
     else
         log_sufix="_"$1
     fi
-    device_model=$(adb shell getprop ro.product.model)
-    echo "Device is $device_model"
-    log_file=log_${device_model}_$(date +%F-%H-%M)$log_sufix.txt
-    echo 'Android log saved as '$log_file
+     
     if [[ $0 == *termux* ]]; then
+        device_model=$(getprop ro.product.model)
+        echo "Device is $device_model"
+        log_file=log_${device_model}_$(date +%F-%H-%M)$log_sufix.txt
+        echo 'Android log saved as '$log_file
         logcat -d -v time > $log_file
     else
+        device_model=$(adb shell getprop ro.product.model)
+        echo "Device is $device_model"
+        log_file=log_${device_model}_$(date +%F-%H-%M)$log_sufix.txt
+        echo 'Android log saved as '$log_file
+   
         adb shell logcat -d -v time > $log_file
     fi
 
