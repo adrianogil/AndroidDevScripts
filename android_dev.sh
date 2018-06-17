@@ -207,8 +207,28 @@ alias getlog='ls -t log_*.txt | head -1'
 alias openlog='ls -t log_*.txt | head -1 | xargs -I {} sublime -n {}'
 alias gilcat='adb logcat | grep GilLog'
 alias gillog='ls -t log_*.txt | head -1 | xargs -I {} cat {} | grep "GilLog" | less'
-alias clrcat='echo "Clearing logs from Android device "$(adb shell getprop ro.product.model) && adb logcat -c'
-alias augcat='echo "Augment logcat buffer to 64M (Android device "$(adb shell getprop ro.product.model)")" && adb logcat -G 64M'
+
+function clrcat()
+{
+    if [[ $0 == *termux* ]]; then
+        echo "Clearing logs from Android device "$(getprop ro.product.model)
+        logcat -c
+    else
+        echo "Clearing logs from Android device "$(adb shell getprop ro.product.model)
+        adb logcat -c
+    fi
+}
+
+function augcat()
+{
+    if [[ $0 == *termux* ]]; then
+        echo "Augment logcat buffer to 64M (Android device "$(getprop ro.product.model)")"
+        logcat -G 64M
+    else
+        echo "Augment logcat buffer to 64M (Android device "$(adb shell getprop ro.product.model)")"
+        adb logcat -G 64M
+    fi
+}
 
 alias droid-install='adb install'
 
