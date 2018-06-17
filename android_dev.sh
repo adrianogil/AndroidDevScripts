@@ -128,7 +128,12 @@ function dlog()
     echo "Device is $device_model"
     log_file=log_${device_model}_$(date +%F-%H-%M)$log_sufix.txt
     echo 'Android log saved as '$log_file
-    adb shell logcat -d -v time > $log_file
+    if [[ $0 == *termux* ]]; then
+        logcat -d -v time > $log_file
+    else
+        adb shell logcat -d -v time > $log_file
+    fi
+
     number_of_lines=$(cat $log_file | wc -l)
     echo ''$number_of_lines' lines'
 }
