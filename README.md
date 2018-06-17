@@ -26,6 +26,7 @@ logunityexception
 Get process id of an Unity application
 ```
 logunitypid
+```
 
 ## Planned features
 - List logs generated in a specific date in current log directory
