@@ -260,6 +260,19 @@ alias droid-get-ipaddress-wlan='python2 '$ANDROID_DEV_SCRIPTS_DIR'/python/net/wl
 
 alias droid-get-processor-arch='adb shell getprop ro.product.cpu.abi'
 
+function droid-get-anr-traces()
+{
+    if [ -z $1 ]; then
+        log_sufix=""
+    else
+        log_sufix="_"$1
+    fi
+
+    trace_log_file="traces${log_sufix}_$(adb shell getprop ro.product.model)_$(date +%F-%H-%M).txt"
+
+    adb pull /data/anr/traces.txt $trace_log_file
+}
+
 function droid-get-screenshot()
 {
     adb shell screencap -p /sdcard/screen.png
