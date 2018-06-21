@@ -19,7 +19,7 @@ function ikc()
 {
     if [ -z $1 ]; then
         if hash gfind 2>/dev/null; then
-            apk_file=$(gfind . -name '*.apk' -type f -printf "%-.22T+ %M %n %-8u %-8g %8s %Tx %.8TX %p\n" | sort | cut -c87- | tail -1)
+            apk_file=$(gfind . -name '*.apk' -type f -printf "%-.22T+ %M %n %-8u %-8g %8s %Tx %.8TX %p\n" | sort | awk '{print $9}' | tail -1)
         else
             apk_file=$(find . -name '*.apk' | head -1)
         fi
@@ -124,7 +124,7 @@ function dlog()
     else
         log_sufix="_"$1
     fi
-     
+
     if [[ $0 == *termux* ]]; then
         device_model=$(getprop ro.product.model)
         echo "Device is $device_model"
@@ -136,7 +136,7 @@ function dlog()
         echo "Device is $device_model"
         log_file=log_${device_model}_$(date +%F-%H-%M)$log_sufix.txt
         echo 'Android log saved as '$log_file
-   
+
         adb shell logcat -d -v time > $log_file
     fi
 
@@ -259,6 +259,13 @@ alias droid-list-all-installed-apks='adb shell dumpsys activity activities | gre
 alias droid-get-ipaddress-wlan='python2 '$ANDROID_DEV_SCRIPTS_DIR'/python/net/wlanip.py'
 
 alias droid-get-processor-arch='adb shell getprop ro.product.cpu.abi'
+
+alias droid-get-gpu-info='adb shell dumpsys | grep GLES'
+
+function devdroid_list_libdependencies()
+{
+     $ANDROID_SDK/ndk-bundle/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64/bin/arm-linux-androideabi-readelf -d $1 | grep "\(NEEDED\)"
+}
 
 function droid-get-anr-traces()
 {
