@@ -7,7 +7,7 @@ line_number = 1;
 def is_error(line):
     return line.find("Exception") != -1 or line.find("NullReference") != -1 or \
            line.find("Error") != -1 or line.find("error") != -1 or \
-           line.find("ERROR") != -1 or line.find("E/CRASH") != -1
+           line.find("ERROR") != -1 or line.find("E/") != -1
 
 for line in sys.stdin:
   if exception_found and line.find('at ') != -1:
