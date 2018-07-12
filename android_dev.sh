@@ -49,6 +49,12 @@ function ikc()
 
 }
 
+function get_info_from_apk()
+{
+    aapt_tool=$(find $ANDROID_SDK/ -name 'aapt' | tail -1)
+    $aapt_tool dump badging $1
+}
+
 function get_package_name_from_apk()
 {
     aapt_tool=$(find $ANDROID_SDK/ -name 'aapt' | tail -1)
@@ -230,6 +236,11 @@ function augcat()
     fi
 }
 
+function apks()
+{
+    find . -name "*.apk"
+}
+
 alias droid-apk-install='adb install'
 alias droid-app-clear-data='adb shell pm clear'
 alias droid-app-path='adb shell pm path'
@@ -239,7 +250,11 @@ alias droid-api='adb shell getprop ro.build.version.release'
 alias droid-sdk='adb shell getprop ro.build.version.sdk'
 alias droid-devicemodel='adb shell getprop ro.product.model'
 alias droid-display-power-state='adb shell dumpsys power | grep "Display Power: state=" | cut -c22-'
+alias droid-battery-level='adb shell dumpsys battery | grep level'
 alias droid-kernelversion='adb shell cat /proc/version'
+
+alias droid-screen-size='adb shell wm size'
+alias droid-screen-dpi='adb shell wm density'
 
 alias droid-get-pkgname-from-pid='adb shell ps | grep '
 alias droid-installed_apps="adb shell 'pm list packages -f' | sed -e 's/.*=//' | sort"
