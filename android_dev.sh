@@ -277,6 +277,24 @@ alias droid-get-processor-arch='adb shell getprop ro.product.cpu.abi'
 
 alias droid-get-gpu-info='adb shell dumpsys | grep GLES'
 
+# From https://github.com/ender503/Awesome-ADB-toolkits/blob/master/environment
+alias droid-home="adb shell am start -c android.intent.category.HOME -a android.intent.action.MAIN"
+alias droid-settings="adb shell am start -a android.settings.SETTINGS"
+alias droid-developer-options="adb shell am start -n com.android.settings/.DevelopmentSettings"
+
+alias droid-keyevent-back="adb shell input keyevent 4"
+alias droid-keyevent-home="adb shell input keyevent 3"
+alias droid-keyevent-screen-turnoff="adb shell input keyevent 26"
+alias droid-keyevent-camera="adb shell input keyevent 27"
+alias droid-keyevent-play="adb shell input keyevent 126"
+alias droid-keyevent-pause="adb shell input keyevent 127"
+
+
+alias droid-get-free-ram="adb shell dumpsys meminfo | grep \"Free RAM\""
+
+alias droid-dumpsys-services="adb shell dumpsys activity services"
+alias droid-dumpsys-pkg="adb shell dumpsys package"
+
 function devdroid_list_libdependencies()
 {
      $ANDROID_SDK/ndk-bundle/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64/bin/arm-linux-androideabi-readelf -d $1 | grep "\(NEEDED\)"
