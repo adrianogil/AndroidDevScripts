@@ -300,6 +300,8 @@ alias droid-get-free-ram="adb shell dumpsys meminfo | grep \"Free RAM\""
 alias droid-dumpsys-services="adb shell dumpsys activity services"
 alias droid-dumpsys-pkg="adb shell dumpsys package"
 
+alias droid-filesystem="adb shell df -h"
+
 function devdroid_list_libdependencies()
 {
      $ANDROID_SDK/ndk-bundle/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64/bin/arm-linux-androideabi-readelf -d $1 | grep "\(NEEDED\)"
