@@ -133,13 +133,17 @@ function dlog()
 
     if [[ $0 == *termux* ]]; then
         device_model=$(getprop ro.product.model)
+        device_time=$(date)
         echo "Device is $device_model"
+        echo "Current device datetime is "$device_time
         log_file=log_${device_model}_$(date +%F-%H-%M)$log_sufix.txt
         echo 'Android log saved as '$log_file
         logcat -d -v time > $log_file
     else
         device_model=$(adb shell getprop ro.product.model)
+        device_time=$(adb shell date)
         echo "Device is $device_model"
+        echo "Current device datetime is "$device_time
         log_file=log_${device_model}_$(date +%F-%H-%M)$log_sufix.txt
         echo 'Android log saved as '$log_file
 
@@ -289,6 +293,7 @@ alias droid-keyevent-camera="adb shell input keyevent 27"
 alias droid-keyevent-play="adb shell input keyevent 126"
 alias droid-keyevent-pause="adb shell input keyevent 127"
 
+alias droid-time="adb shell date"
 
 alias droid-get-free-ram="adb shell dumpsys meminfo | grep \"Free RAM\""
 
