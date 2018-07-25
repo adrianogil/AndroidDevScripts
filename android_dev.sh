@@ -302,6 +302,15 @@ alias droid-dumpsys-pkg="adb shell dumpsys package"
 
 alias droid-filesystem="adb shell df -h"
 
+# Take a look at http://www.twisterrob.net/blog/2015/04/android-full-thread-dump.html
+function droid-kill()
+{
+    pkg_name=$1
+
+    adb shell am force-stop $pkg_name
+    adb shell am kill --user all $pkg_name
+}
+
 function devdroid_list_libdependencies()
 {
      $ANDROID_SDK/ndk-bundle/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64/bin/arm-linux-androideabi-readelf -d $1 | grep "\(NEEDED\)"
@@ -318,6 +327,9 @@ function droid-get-anr-traces()
     trace_log_file="traces${log_sufix}_$(adb shell getprop ro.product.model)_$(date +%F-%H-%M).txt"
 
     adb pull /data/anr/traces.txt $trace_log_file
+
+    # If it fails you should do
+    # adb shell "cat /data/anr/traces.txt" > traces.txt
 }
 
 function droid-get-screenshot()
