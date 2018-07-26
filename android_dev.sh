@@ -302,6 +302,15 @@ alias droid-dumpsys-pkg="adb shell dumpsys package"
 
 alias droid-filesystem="adb shell df -h"
 
+function droid-recents-tasks()
+{
+    if [[ $0 == *termux* ]]; then
+        dumpsys activity | grep ": TaskRecord{"
+    else
+        adb shell dumpsys activity | grep ": TaskRecord{"
+    fi
+}
+
 # Take a look at http://www.twisterrob.net/blog/2015/04/android-full-thread-dump.html
 function droid-kill()
 {
