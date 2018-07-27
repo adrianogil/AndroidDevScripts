@@ -245,6 +245,12 @@ function apks()
     find . -name "*.apk"
 }
 
+function aars()
+{
+    find . -name "*.aar"
+}
+
+
 alias droid-apk-install='adb install'
 alias droid-app-clear-data='adb shell pm clear'
 alias droid-app-path='adb shell pm path'
