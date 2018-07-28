@@ -260,6 +260,11 @@ function aars()
     fi
 }
 
+# @tool droid - List Android devices
+function droid()
+{
+    adb devices
+}
 
 alias droid-apk-install='adb install'
 alias droid-app-clear-data='adb shell pm clear'
