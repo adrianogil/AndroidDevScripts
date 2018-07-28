@@ -19,6 +19,7 @@ function ikc()
 {
     if [ -z $1 ]; then
         if hash gfind 2>/dev/null; then
+            # gfind cab be installed by "brew install findutils"
             apk_file=$(gfind . -name '*.apk' -type f -printf "%-.22T+ %M %n %-8u %-8g %8s %Tx %.8TX %p\n" | sort | awk '{print $9}' | tail -1)
         else
             apk_file=$(find . -name '*.apk' | head -1)
@@ -247,7 +248,11 @@ function apks()
 
 function aars()
 {
-    find . -name "*.aar"
+    if [[ $1 == "-d" ]]; then
+        gfind . -name '*.aar' -type f -printf "%-.22T+ %M %n %-8u %-8g %8s %Tx %.8TX %p\n" | sort -r | awk '{print $9"\t"$1}'
+    else
+        find . -name "*.aar"
+    fi
 }
 
 
