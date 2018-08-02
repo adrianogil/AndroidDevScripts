@@ -40,7 +40,8 @@ function ikc()
         echo "Last build time was "$ANDROID_IKC_LAST_BUILD_TIME
     fi
     export ANDROID_IKC_LAST_BUILD_TIME=$apk_date
-    adb install -r $apk_file
+    python2 ${ANDROID_DEV_SCRIPTS_DIR}/python/apks/smart_install.py ${package_name} $(abspath $apk_file)
+    # adb install -r $apk_file
     echo "Clear logcat"
     adb logcat -c
     echo "Augment logcat buffer to 64MB"
@@ -248,7 +249,7 @@ function apks()
     else
         find . -name "*.apk"
     fi
-    
+
 }
 
 function aars()
@@ -325,6 +326,18 @@ alias droid-filesystem="adb shell df -h"
 
 alias droid-volume-up="adb shell input keyevent 24"
 alias droid-volume-down="adb shell input keyevent 25"
+
+function droid-device-info()
+{
+    device_model=$(adb shell getprop ro.product.model)
+    kernel_version=$(droid-kernelversion)
+    droid_api=$(adb shell getprop ro.build.version.release)
+    droid_sdk=$(adb shell getprop ro.build.version.sdk)
+
+    echo "Current device is a "$device_model
+    echo "Android API: "$droid_api" and Android SDK "$droid_sdk
+    echo "Kernel version: "$kernel_version
+}
 
 function droid-recents-tasks()
 {
