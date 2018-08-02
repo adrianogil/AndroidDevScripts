@@ -323,6 +323,9 @@ alias droid-dumpsys-pkg="adb shell dumpsys package"
 
 alias droid-filesystem="adb shell df -h"
 
+alias droid-volume-up="adb shell input keyevent 24"
+alias droid-volume-down="adb shell input keyevent 25"
+
 function droid-recents-tasks()
 {
     if [[ $0 == *termux* ]]; then
