@@ -327,6 +327,9 @@ alias droid-filesystem="adb shell df -h"
 alias droid-volume-up="adb shell input keyevent 24"
 alias droid-volume-down="adb shell input keyevent 25"
 
+alias droid-brightness-get="adb shell settings get system screen_brightness"
+alias droid-brightness-set="adb shell settings put system screen_brightness"
+
 function droid-device-info()
 {
     device_model=$(adb shell getprop ro.product.model)
