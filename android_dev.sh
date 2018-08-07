@@ -301,10 +301,10 @@ alias droid-kernelversion='adb shell cat /proc/version'
 alias droid-screen-size='adb shell wm size'
 alias droid-screen-dpi='adb shell wm density'
 
-alias droid-get-pkgname-from-pid='adb shell ps | grep '
+alias droid-pkgname-from-pid='adb shell ps | grep '
 alias droid-installed_apps="adb shell 'pm list packages -f' | sed -e 's/.*=//' | sort"
 
-alias droid-get-focused-pkg="adb shell dumpsys activity activities | grep mFocusedActivity"
+alias droid-focused-pkg="adb shell dumpsys activity activities | grep mFocusedActivity"
 
 alias droid-force-stop-pkg="adb shell am force-stop "
 
