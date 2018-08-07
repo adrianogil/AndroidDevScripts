@@ -24,7 +24,8 @@ except subprocess.CalledProcessError as e:
     error_output = e.output.decode()
     print("Got error: " + error_output)
     if 'INSTALL_FAILED_ALREADY_EXISTS' in error_output or \
-        'INSTALL_FAILED_VERSION_DOWNGRADE' in error_output:
+        'INSTALL_FAILED_VERSION_DOWNGRADE' in error_output or \
+        'INSTALL_FAILED_UPDATE_INCOMPATIBLE' in error_output:
         print("Let's uninstall current version from device!")
         # response = raw_input("Would you like to uninstall current version from device? (y) ")
         # if response == '\n' or response == 'y':

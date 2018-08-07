@@ -57,6 +57,25 @@ function get_info_from_apk()
     $aapt_tool dump badging $1
 }
 
+function apk_permissions()
+{
+    if [ -z $1 ]; then
+        if hash gfind 2>/dev/null; then
+            # gfind cab be installed by "brew install findutils"
+            apk_file=$(gfind . -name '*.apk' -type f -printf "%-.22T+ %M %n %-8u %-8g %8s %Tx %.8TX %p\n" | sort | awk '{print $9}' | tail -1)
+        else
+            apk_file=$(find . -name '*.apk' | head -1)
+        fi
+    else
+        apk_file=$1
+    fi
+
+    aapt_tool=$(find $ANDROID_SDK/ -name 'aapt' | tail -1)
+    $aapt_tool d permissions $apk_file
+}
+
+
+
 function get_package_name_from_apk()
 {
     aapt_tool=$(find $ANDROID_SDK/ -name 'aapt' | tail -1)
@@ -331,6 +350,7 @@ alias droid-brightness-get="adb shell settings get system screen_brightness"
 alias droid-brightness-set="adb shell settings put system screen_brightness"
 
 function droid-device-info()
+
 {
     device_model=$(adb shell getprop ro.product.model)
     kernel_version=$(droid-kernelversion)
