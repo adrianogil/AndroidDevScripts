@@ -349,8 +349,46 @@ alias droid-volume-down="adb shell input keyevent 25"
 alias droid-brightness-get="adb shell settings get system screen_brightness"
 alias droid-brightness-set="adb shell settings put system screen_brightness"
 
-function droid-device-info()
+function droid-app-version()
+{
+    if [ -z $1 ]; then
+        if hash gfind 2>/dev/null; then
+            # gfind cab be installed by "brew install findutils"
+            apk_file=$(gfind . -name '*.apk' -type f -printf "%-.22T+ %M %n %-8u %-8g %8s %Tx %.8TX %p\n" | sort | awk '{print $9}' | tail -1)
+        else
+            apk_file=$(find . -name '*.apk' | head -1)
+        fi
 
+        package_name=$(get_package_name_from_apk $apk_file)
+    else
+        package_name=$1
+    fi
+
+    adb shell dumpsys package $package_name | grep versionName | cut -c17-
+}
+
+function droid-app()
+{
+    if [ -z $1 ]; then
+        if hash gfind 2>/dev/null; then
+            # gfind cab be installed by "brew install findutils"
+            apk_file=$(gfind . -name '*.apk' -type f -printf "%-.22T+ %M %n %-8u %-8g %8s %Tx %.8TX %p\n" | sort | awk '{print $9}' | tail -1)
+        else
+            apk_file=$(find . -name '*.apk' | head -1)
+        fi
+
+        echo "Got package name from APK "$apk_file
+
+        package_name=$(get_package_name_from_apk $apk_file)
+    else
+        package_name=$1
+    fi
+
+    echo "Package name: "$package_name
+    echo "Package version: "$(droid-app-version $package_name)
+}
+
+function droid-device-info()
 {
     device_model=$(adb shell getprop ro.product.model)
     kernel_version=$(droid-kernelversion)
