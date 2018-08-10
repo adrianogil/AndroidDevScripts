@@ -51,11 +51,12 @@ function ikc()
 
 }
 
-function get_info_from_apk()
+function droid-apk-info()
 {
     aapt_tool=$(find $ANDROID_SDK/ -name 'aapt' | tail -1)
     $aapt_tool dump badging $1
 }
+
 
 function apk_permissions()
 {
