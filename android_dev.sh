@@ -389,6 +389,11 @@ function droid-app()
     echo "Package version: "$(droid-app-version $package_name)
 }
 
+function droid-app-install-time()
+{
+    adb shell dumpsys package $1  | grep -A1 "firstInstallTime"
+}
+
 function droid-device-info()
 {
     device_model=$(adb shell getprop ro.product.model)
