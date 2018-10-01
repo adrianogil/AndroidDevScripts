@@ -22,4 +22,7 @@ for i in xrange(0, len(apk_path_list)):
     print('Backup APK ' + apk_list[i])
     apk_bkp_cmd    = "mkdir " + apk_list[i] + " && adb pull " + apk_path_list[i] + ' ' + apk_list[i] + "/"
     # print(apk_bkp_cmd)
-    subprocess.check_output(apk_bkp_cmd, shell=True, stderr=subprocess.STDOUT)
+    try:
+        subprocess.check_output(apk_bkp_cmd, shell=True, stderr=subprocess.STDOUT)
+    except:
+        pass
