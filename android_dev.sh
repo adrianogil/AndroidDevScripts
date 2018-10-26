@@ -352,6 +352,41 @@ alias droid-volume-down="adb shell input keyevent 25"
 alias droid-brightness-get="adb shell settings get system screen_brightness"
 alias droid-brightness-set="adb shell settings put system screen_brightness"
 
+function droid-open-text()
+{
+    echo "Open text file "$1"using DroidEdit Free"
+
+    if [[ $0 == *termux* ]]; then
+        real_file_path=$(abspath $1)
+        real_file_path=$(echo $real_file_path | sed "s@data/data/com.termux/files/home/storage/shared@sdcard@g" )
+
+        am start -n "com.aor.droidedit/.DroidEditFreeActivity" -d "file://"$real_file_path
+    else
+        real_file_path=$1
+        real_file_path=$(echo $real_file_path | sed "s@data/data/com.termux/files/home/storage/shared@sdcard@g" )
+
+        adb shell am start -n "com.aor.droidedit/.DroidEditFreeActivity" -d "file://"$real_file_path
+    fi
+}
+
+function droid-open-file()
+{
+    echo "Open file "$1
+
+    if [[ $0 == *termux* ]]; then
+        real_file_path=$(abspath $1)
+        real_file_path=$(echo $real_file_path | sed "s@data/data/com.termux/files/home/storage/shared@sdcard@g" )
+
+        am start -a android.intent.action.VIEW -d  "file://"$real_file_path
+    else
+        real_file_path=$1
+        real_file_path=$(echo $real_file_path | sed "s@data/data/com.termux/files/home/storage/shared@sdcard@g" )
+
+        adb shell am start -a android.intent.action.VIEW -d  "file://"$real_file_path
+    fi
+}
+
+
 function droid-app-version()
 {
     if [ -z $1 ]; then
