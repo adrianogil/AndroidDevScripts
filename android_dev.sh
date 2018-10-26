@@ -352,6 +352,14 @@ alias droid-volume-down="adb shell input keyevent 25"
 alias droid-brightness-get="adb shell settings get system screen_brightness"
 alias droid-brightness-set="adb shell settings put system screen_brightness"
 
+function droid-app-activities()
+{
+    # Using command from
+    # https://stackoverflow.com/questions/33441138/how-to-find-out-activity-names-in-a-package-android-adb-shell
+    package_name=$1
+    adb shell dumpsys package | grep -i "$package_name" | grep Activity
+}
+
 function droid-open-text()
 {
     echo "Open text file "$1"using DroidEdit Free"
