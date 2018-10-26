@@ -387,6 +387,23 @@ function droid-open-file()
 }
 
 
+function droid-open-pdf()
+{
+    echo "Open file "$1
+
+    if [[ $0 == *termux* ]]; then
+        real_file_path=$(abspath $1)
+        real_file_path=$(echo $real_file_path | sed "s@data/data/com.termux/files/home/storage/shared@sdcard@g" )
+
+        am start -a android.intent.action.VIEW -d  "file://"$real_file_path -t "application/pdf"
+    else
+        real_file_path=$1
+        real_file_path=$(echo $real_file_path | sed "s@data/data/com.termux/files/home/storage/shared@sdcard@g" )
+
+        adb shell am start -a android.intent.action.VIEW -d  "file://"$real_file_path -t "application/pdf"
+    fi
+}
+
 function droid-app-version()
 {
     if [ -z $1 ]; then
