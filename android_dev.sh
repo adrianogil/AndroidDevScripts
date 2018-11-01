@@ -396,7 +396,7 @@ function droid-open-text()
 
 function droid-open-text-as-tmp()
 {
-    $file=$1
+    file=$1
 
     echo "Open text file "$file" in a tmp folder using DroidEdit Free"
 
