@@ -422,14 +422,16 @@ function droid-open-text-as-tmp()
         adb shell am start -n "com.aor.droidedit/.DroidEditFreeActivity" -d "file://"$real_file_path
     fi
 }
-alias dtxt='droid-open-text-as-tmp'
+alias dp-txt='droid-open-text-as-tmp'
 
 function droid-reload-text-from-tmp()
 {
     file=$1
     tmp_file=$(cat $file.tmp)
     mv $tmp_file $file
+    rm $file.tmp
 }
+alias dp-reload='droid-reload-text-from-tmp'
 
 function droid-open-file()
 {
