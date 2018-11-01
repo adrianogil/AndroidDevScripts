@@ -28,6 +28,8 @@ Get process id of an Unity application
 logunitypid
 ```
 
+Alias to open files
+
 ## Planned features
 - List logs generated in a specific date in current log directory
 ```
