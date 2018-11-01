@@ -394,6 +394,41 @@ function droid-open-text()
     fi
 }
 
+function droid-open-text-as-tmp()
+{
+    $file=$1
+
+    echo "Open text file "$file" in a tmp folder using DroidEdit Free"
+
+    filename=$(basename -- "$file")
+    file_dir="${file%$filename}"
+
+    tmp_path=/sdcard/tmp/tmp_$filename
+
+    echo $tmp_path > $file.tmp
+    text_file=$tmp_path
+
+    if [[ $0 == *termux* ]]; then
+        real_file_path=$(abspath $text_file)
+        real_file_path=$(echo $real_file_path | sed "s@data/data/com.termux/files/home/storage/shared@sdcard@g" )
+
+        am start -n "com.aor.droidedit/.DroidEditFreeActivity" -d "file://"$real_file_path
+    else
+        real_file_path=$text_file
+        real_file_path=$(echo $real_file_path | sed "s@data/data/com.termux/files/home/storage/shared@sdcard@g" )
+
+        adb shell am start -n "com.aor.droidedit/.DroidEditFreeActivity" -d "file://"$real_file_path
+    fi
+}
+alias dtxt='droid-open-text-as-tmp'
+
+function droid-reload-text-from-tmp()
+{
+    file=$1
+    tmp_file=$(cat $file.tmp)
+    mv $tmp_file $file
+}
+
 function droid-open-file()
 {
     echo "Open file "$1
