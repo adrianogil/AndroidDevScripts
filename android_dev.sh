@@ -375,7 +375,7 @@ function droid-open()
     fi
 }
 
-alias do='droid-open'
+alias dp="droid-open"
 
 function droid-open-text()
 {
