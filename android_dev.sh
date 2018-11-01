@@ -360,6 +360,23 @@ function droid-app-activities()
     adb shell dumpsys package | grep -i "$package_name" | grep Activity
 }
 
+function droid-open()
+{
+    file=$1
+
+    if [ ${file: -4} == ".pdf" ]; then
+        droid-open-pdf $file
+    elif [ ${file: -4} == ".stl" ]; then
+        droid-open-model $file
+    elif [ ${file: -4} == ".txt" ]; then
+        droid-open-text $file
+    else
+        droid-open-file $file
+    fi
+}
+
+alias do='droid-open'
+
 function droid-open-text()
 {
     echo "Open text file "$1"using DroidEdit Free"
