@@ -405,6 +405,8 @@ function droid-open-text-as-tmp()
 
     tmp_path=/sdcard/tmp/tmp_$filename
 
+    cp $file $tmp_path
+
     echo $tmp_path > $file.tmp
     text_file=$tmp_path
 
