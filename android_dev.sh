@@ -424,6 +424,23 @@ function droid-open-text-as-tmp()
 }
 alias dp-txt='droid-open-text-as-tmp'
 
+# Based on https://android.stackexchange.com/a/199496
+function droid-get-open-chrome-tabs()
+{
+    if [ -z "$1" ]
+    then
+        session_file=$(gfind . -name '*.chrome-session' -type f -printf "%-.22T+ %M %n %-8u %-8g %8s %Tx %.8TX %p\n" | sort -r | awk '{print $9}' | head -1)
+    else
+        session_file=$1'.chrome-session'
+    fi
+    adb forward tcp:9222 localabstract:chrome_devtools_remote
+    wget -O $TMP_DIR/tabs.json http://localhost:9222/json/list
+
+    cat $TMP_DIR/tabs.json | grep 'url' | tr ',' ' ' |  awk '{print $2}' > $session_file
+    session_size=$(cat $session_file | wc -l)
+    echo 'Saved'$session_size' open tabs from Android Google Chrome into file '$session_file
+}
+
 function droid-reload-text-from-tmp()
 {
     file=$1
