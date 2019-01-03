@@ -424,6 +424,15 @@ function droid-open-text-as-tmp()
 }
 alias dp-txt='droid-open-text-as-tmp'
 
+function droid-reload-text-from-tmp()
+{
+    file=$1
+    tmp_file=$(cat $file.tmp)
+    mv $tmp_file $file
+    rm $file.tmp
+}
+alias dp-txt-reload='droid-reload-text-from-tmp'
+
 # Based on https://android.stackexchange.com/a/199496
 function droid-get-open-chrome-tabs()
 {
@@ -440,15 +449,6 @@ function droid-get-open-chrome-tabs()
     session_size=$(cat $session_file | wc -l)
     echo 'Saved'$session_size' open tabs from Android Google Chrome into file '$session_file
 }
-
-function droid-reload-text-from-tmp()
-{
-    file=$1
-    tmp_file=$(cat $file.tmp)
-    mv $tmp_file $file
-    rm $file.tmp
-}
-alias dp-reload='droid-reload-text-from-tmp'
 
 function droid-open-file()
 {
