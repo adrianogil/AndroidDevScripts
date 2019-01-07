@@ -289,6 +289,12 @@ function droid()
     adb devices
 }
 
+function droid-playstore-install()
+{
+    package=$1
+    adb shell am start -a 'android.intent.action.VIEW' -d 'market://details?id='$package
+}
+
 alias droid-apk-install='adb install'
 alias droid-app-clear-data='adb shell pm clear'
 alias droid-app-path='adb shell pm path'
@@ -385,12 +391,12 @@ function droid-open-text()
         real_file_path=$(abspath $1)
         real_file_path=$(echo $real_file_path | sed "s@data/data/com.termux/files/home/storage/shared@sdcard@g" )
 
-        am start -n "com.aor.droidedit/.DroidEditFreeActivity" -d "file://"$real_file_path
+        am start -n "$TEXT_EDITOR_APP" -d "file://"$real_file_path
     else
         real_file_path=$1
         real_file_path=$(echo $real_file_path | sed "s@data/data/com.termux/files/home/storage/shared@sdcard@g" )
 
-        adb shell am start -n "com.aor.droidedit/.DroidEditFreeActivity" -d "file://"$real_file_path
+        adb shell am start -n "$TEXT_EDITOR_APP" -d "file://"$real_file_path
     fi
 }
 
@@ -414,12 +420,12 @@ function droid-open-text-as-tmp()
         real_file_path=$(abspath $text_file)
         real_file_path=$(echo $real_file_path | sed "s@data/data/com.termux/files/home/storage/shared@sdcard@g" )
 
-        am start -n "com.aor.droidedit/.DroidEditFreeActivity" -d "file://"$real_file_path
+        am start -n "$TEXT_EDITOR_APP" -d "file://"$real_file_path
     else
         real_file_path=$text_file
         real_file_path=$(echo $real_file_path | sed "s@data/data/com.termux/files/home/storage/shared@sdcard@g" )
 
-        adb shell am start -n "com.aor.droidedit/.DroidEditFreeActivity" -d "file://"$real_file_path
+        adb shell am start -n "$TEXT_EDITOR_APP" -d "file://"$real_file_path
     fi
 }
 alias dp-txt='droid-open-text-as-tmp'
