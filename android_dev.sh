@@ -320,6 +320,7 @@ alias droid-force-stop-pkg="adb shell am force-stop "
 alias droid-get-notifications="adb shell dumpsys notification | less"
 
 alias droid-open-url='adb shell am start -a "android.intent.action.VIEW" -d '
+alias dou="echo 'Open URL on Android device' && droid-open-url"
 
 alias droid-record-video-from-screen='video_dir=/sdcard/test.mp4 && echo "Saving video to "$video_dir && adb shell screenrecord $video_dir'
 
