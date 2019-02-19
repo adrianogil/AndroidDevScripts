@@ -1,25 +1,31 @@
+# python2
 import subprocess, sys, traceback
 
 package_name = sys.argv[1]
 apk_path = sys.argv[2]
 
+total_flags = len(sys.argv) - 3
+flags = []
+for i in xrange(0, total_flags):
+    flags.append(sys.argv[3+i])
+
 # print("smart_install - apk_path " + apk_path)
 
-def install_apk(apk_path):
+def install_apk(apk_path, only_install_mode=False):
     print('Installing APK ' + apk_path)
-    apk_install_cmd    = "adb install " + apk_path
+    apk_install_cmd = "adb install "
+    if not only_install_mode:
+        apk_install_cmd += '-r '
+    apk_install_cmd += apk_path
+
     apk_install_output = subprocess.check_output(apk_install_cmd, shell=True, stderr=subprocess.STDOUT)
     apk_install_output = apk_install_output.strip().split('\n')
     apk_install_output = apk_install_output[0].strip()
     print(apk_install_output)
 
 try:
-    # apk_install_cmd    = "adb install " + apk_path
-    # apk_install_output = subprocess.check_output(apk_install_cmd, shell=True)
-    # apk_install_output = apk_install_output.strapk_install().split('\n')
-    # apk_install_output = apk_install_output[0].strapk_install()
-    # print(apk_install_output)
-    install_apk(apk_path)
+    only_install_mode_flag = '-f' in flags
+    install_apk(apk_path, only_install_mode=only_install_mode_flag)
 except subprocess.CalledProcessError as e:
     error_output = e.output.decode()
     print("Got error: " + error_output)
