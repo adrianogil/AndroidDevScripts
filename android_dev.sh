@@ -120,6 +120,7 @@ function launch_from_apk()
 
     launch_package $pkg_name
 }
+alias droid-apk-launch="launch_from_apk"
 
 # Launch Application from package name
 function launch_package()
