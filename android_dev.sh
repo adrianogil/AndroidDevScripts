@@ -128,6 +128,14 @@ function launch_package()
     adb shell monkey -p $1 -c android.intent.category.LAUNCHER 1
 }
 
+function droid-launch-app()
+{
+    APK=$1
+    ACTIVITY=$2
+
+    adb shell am start -n ${APK}/${ACTIVITY}
+}
+
 # Install and launch Android APK
 function ikl()
 {
