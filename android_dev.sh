@@ -621,6 +621,19 @@ function droid-get-screenshot()
     mv screen.png screenshot_$(date +%F-%H:%M).png
 }
 
+function droid-get-ui-xml()
+{
+    if [ -z $1 ]; then
+        target_file="ui"
+    else
+        target_file=$1
+    fi
+
+    adb exec-out uiautomator dump /dev/tty > ${target_file}.xml
+
+    echo "Downloaded UI XML into file '"${target_file}".xml'"
+}
+
 function devdroid-connect-wifi()
 {
     adb tcpip 5555
