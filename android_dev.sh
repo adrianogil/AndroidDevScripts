@@ -557,6 +557,13 @@ function droid-app()
     echo "Package version: "$(droid-app-version $package_name)
 }
 
+function droid-app-add-permission()
+{
+    app_package=$1
+    permission=$2
+    adb shell pm grant $app_package $permission
+}
+
 function droid-app-install-time()
 {
     adb shell dumpsys package $1  | grep -A1 "firstInstallTime"
