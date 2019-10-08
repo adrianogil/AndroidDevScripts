@@ -724,3 +724,8 @@ function devdroid_keystore_info()
 }
 
 alias devdroid_show_all_local_properties='f "local.properties"'
+
+function kill-all-adb-instances()
+{
+    ps aux | grep "adb -L" |  grep -v "grep" | awk '{print $2}' | xargs -I {} sudo kill -9 {}
+}
