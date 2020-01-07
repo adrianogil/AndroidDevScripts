@@ -572,11 +572,13 @@ function droid-app-install-time()
 function droid-device-info()
 {
     device_model=$(adb shell getprop ro.product.model)
+    device_version=$(adb shell getprop ro.bootloader)
     kernel_version=$(droid-kernelversion)
     droid_api=$(adb shell getprop ro.build.version.release)
     droid_sdk=$(adb shell getprop ro.build.version.sdk)
 
     echo "Current device is a "$device_model
+    echo "Device version: "${device_version}
     echo "Android API: "$droid_api" and Android SDK "$droid_sdk
     echo "Kernel version: "$kernel_version
 }
