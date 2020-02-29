@@ -299,6 +299,14 @@ function droid()
     adb devices
 }
 
+# droidtool droid-device
+# @tool droid-device - Pick an available Android device
+function droid-device()
+{
+    selected_device=$(adb devices | tail -n +2 | awk '{print $1}' | sk)
+    echo ${selected_device} | tr '\n' ' ' | pbcopy
+}
+
 function droid-playstore-install()
 {
     package=$1
