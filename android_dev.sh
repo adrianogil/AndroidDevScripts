@@ -305,6 +305,15 @@ function droid-device()
 {
     selected_device=$(adb devices | tail -n +2 | awk '{print $1}' | sk)
     echo ${selected_device} | tr '\n' ' ' | pbcopy
+    echo ${selected_device}
+}
+
+# droidtool droid-scrcpy
+# @tool droid-scrcpy - Open a scrcpy instance with an available Android device
+function droid-scrcpy()
+{
+    target_device=$(droid-device)
+    scrcpy -s ${target_device}
 }
 
 function droid-playstore-install()
