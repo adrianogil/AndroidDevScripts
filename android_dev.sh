@@ -303,7 +303,11 @@ function droid()
 # @tool droid-device - Pick an available Android device
 function droid-device()
 {
-    selected_device=$(adb devices | tail -n +2 | awk '{print $1}' | sk)
+    if [[ $(adb devices | wc -l) -le 3 ]]; then
+        selected_device=$(adb devices | tail -n +2 | awk '{print $1}')
+    else
+        selected_device=$(adb devices | tail -n +2 | awk '{print $1}' | sk)
+    fi
     echo ${selected_device} | tr '\n' ' ' | pbcopy
     echo ${selected_device}
 }
@@ -350,8 +354,6 @@ alias droid-open-url='adb shell am start -a "android.intent.action.VIEW" -d '
 alias dou="echo 'Open URL on Android device' && droid-open-url"
 
 alias droid-record-video-from-screen='video_dir=/sdcard/test.mp4 && echo "Saving video to "$video_dir && adb shell screenrecord $video_dir'
-
-alias droid-list-all-installed-apks='adb shell dumpsys activity activities | grep apk | less'
 
 alias droid-get-ipaddress-wlan='python2 '$ANDROID_DEV_SCRIPTS_DIR'/python/net/wlanip.py'
 
@@ -554,6 +556,28 @@ function droid-app-version()
     adb shell dumpsys package $package_name | grep versionName | cut -c17-
 }
 
+function droid-list-all-installed-apks()
+{
+    if [ -z $1 ]; then
+        target_device=$(droid-device)
+    else
+        target_device=$1
+    fi
+
+    adb -s ${target_device} shell pm list packages -f | sed "s/apk=/ /" | awk '{print $2}'
+}
+
+function droid-list-all-installed-apks-sk()
+{
+    if [ -z $1 ]; then
+        target_device=$(droid-device)
+    else
+        target_device=$1
+    fi
+
+    adb -s ${target_device} shell pm list packages -f | sed "s/apk=/ /" | awk '{print $2}' | sk
+}
+
 function droid-app()
 {
     if [ -z $1 ]; then
@@ -585,6 +609,26 @@ function droid-app-add-permission()
 function droid-app-install-time()
 {
     adb shell dumpsys package $1  | grep -A1 "firstInstallTime"
+}
+
+function droid-app-list-permissions()
+{
+    if [ -z $2 ]; then
+        target_device=$(droid-device)
+    else
+        target_device=$2
+    fi
+
+    if [ -z $1 ]; then
+        package_name=$(droid-list-all-installed-apks-sk ${target_device})
+    else
+        package_name=$1
+    fi
+
+    echo ${target_device}
+    echo ${package_name}
+
+    adb -s ${target_device} shell dumpsys package ${package_name} | grep "granted="
 }
 
 function droid-device-info()
@@ -645,7 +689,7 @@ function droid-get-screenshot()
     adb shell screencap -p /sdcard/screen.png
     adb pull /sdcard/screen.png
     adb shell rm /sdcard/screen.png
-    mv screen.png screenshot_$(date +%F-%H:%M).png
+    mv screen.png screenshot_$(date +%F_%H_%M).png
 }
 
 function droid-get-ui-xml()
