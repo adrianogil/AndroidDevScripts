@@ -312,6 +312,14 @@ function droid-device()
     echo ${selected_device}
 }
 
+# droidtool droid-cat
+# @tool droid-cat - Show logcat
+function droid-cat()
+{
+    target_device=$(droid-device)
+    adb -s ${target_device} logcat
+}
+
 # droidtool droid-scrcpy
 # @tool droid-scrcpy - Open a scrcpy instance with an available Android device
 function droid-scrcpy()
