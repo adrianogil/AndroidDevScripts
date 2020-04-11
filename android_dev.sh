@@ -320,6 +320,17 @@ function droid-cat()
     adb -s ${target_device} logcat
 }
 
+# droidtool droid-neko
+# @tool droid-neko - Custom view of logcat
+function droid-neko()
+{
+    target_device=$(droid-device)
+    adb -s ${target_device} logcat
+
+    python3 $ANDROID_DEV_SCRIPTS_DIR/python/log/droidneko.py --target-device ${target_device}
+}
+
+
 # droidtool droid-scrcpy
 # @tool droid-scrcpy - Open a scrcpy instance with an available Android device
 function droid-scrcpy()
