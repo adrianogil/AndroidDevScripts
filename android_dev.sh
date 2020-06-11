@@ -338,7 +338,12 @@ function droid-neko()
 function droid-scrcpy()
 {
     target_device=$(droid-device)
-    scrcpy -s ${target_device}
+    
+    if [ -z $1 ]; then
+        scrcpy -s ${target_device}
+    else
+        scrcpy -s ${target_device} -p $1
+    fi    
 }
 
 function droid-playstore-install()
