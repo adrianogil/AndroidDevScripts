@@ -325,9 +325,8 @@ function droid-cat()
 function droid-neko()
 {
     target_device=$(droid-device)
-    adb -s ${target_device} logcat
 
-    python3 $ANDROID_DEV_SCRIPTS_DIR/python/log/droidneko.py --target-device ${target_device}
+    python3 $ANDROID_DEV_SCRIPTS_DIR/python/log/droidneko.py --device ${target_device}
 }
 
 
