@@ -164,6 +164,7 @@ function dlog()
         log_sufix="_"$1
     fi
 
+
     if [[ $0 == *termux* ]]; then
         device_model=$(getprop ro.product.model)
         device_time=$(date)
@@ -173,14 +174,16 @@ function dlog()
         echo 'Android log saved as '$log_file
         logcat -d -v time > $log_file
     else
-        device_model=$(adb shell getprop ro.product.model)
-        device_time=$(adb shell date)
+        target_device=$(droid-device)
+
+        device_model=$(adb -s ${target_device} shell getprop ro.product.model)
+        device_time=$(adb -s ${target_device} shell date)
         echo "Device is $device_model"
         echo "Current device datetime is "$device_time
         log_file=log_${device_model}_$(date +%F-%H-%M)$log_sufix.txt
         echo 'Android log saved as '$log_file
 
-        adb shell logcat -d -v time > $log_file
+        adb -s ${target_device} shell logcat -d -v time > $log_file
     fi
 
     number_of_lines=$(cat $log_file | wc -l)
@@ -704,9 +707,16 @@ function droid-get-anr-traces()
 
 function droid-get-screenshot()
 {
-    adb shell screencap -p /sdcard/screen.png
-    adb pull /sdcard/screen.png
-    adb shell rm /sdcard/screen.png
+    if [ -z $1 ]; then
+        target_device=$(droid-device)
+    else
+        target_device=$1
+    fi
+
+    adb -s ${target_device}  shell screencap -p /sdcard/screen.png
+    adb -s ${target_device} pull /sdcard/screen.png
+    adb -s ${target_device} shell rm /sdcard/screen.png
+
     mv screen.png screenshot_$(date +%F_%H_%M).png
 }
 
