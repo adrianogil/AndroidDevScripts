@@ -625,6 +625,14 @@ function droid-app()
     echo "Package version: "$(droid-app-version $package_name)
 }
 
+function droid-app-open-activity()
+{
+    target_device=$(droid-device)
+    target_activity=$1
+
+    adb -s ${target_device} shell am start -n ${target_activity}
+}
+
 function droid-app-add-permission()
 {
     app_package=$1
