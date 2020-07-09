@@ -625,10 +625,26 @@ function droid-app()
     echo "Package version: "$(droid-app-version $package_name)
 }
 
+function droid-app-get-current-activity()
+{
+    if [ -z $1 ]; then
+        target_device=$(droid-device)
+    else
+        target_device=$1
+    fi
+
+    adb -s ${target_device} shell dumpsys activity a . | grep -E 'mResumedActivity' | cut -d ' ' -f 8
+}
+
 function droid-app-open-activity()
 {
     target_device=$(droid-device)
-    target_activity=$1
+    if [ -z $1 ]; then
+        target_pkg=$(adb -s ${target_device} shell pm list packages -f | sed "s/apk=/ /" | awk '{print $2}' | sk )
+        target_activity=$(adb shell dumpsys package | grep -i "$target_pkg" | grep Activity | sk)
+    else
+        target_activity=$1
+    fi
 
     adb -s ${target_device} shell am start -n ${target_activity}
 }
