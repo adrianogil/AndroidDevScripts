@@ -633,6 +633,17 @@ function droid-app()
     echo "Package version: "$(droid-app-version $package_name)
 }
 
+function droid-app-detail()
+{
+    if [ -z $1 ]; then
+        target_package=$(droid-list-all-installed-apks-sk)
+    else
+        target_package=$1
+    fi
+
+    python3 -m droid.app.appdetails ${target_package}
+}
+
 function droid-app-get-current-activity()
 {
     if [ -z $1 ]; then

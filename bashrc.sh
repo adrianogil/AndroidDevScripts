@@ -6,6 +6,13 @@
 source ${ANDROID_DEV_SCRIPTS_DIR}/android_dev.sh
 source ${ANDROID_DEV_SCRIPTS_DIR}/vr_android_dev.sh
 
+
+if [ -z "$DROID_PYTHON_PATH" ]
+then
+    export DROID_PYTHON_PATH=$ANDROID_DEV_SCRIPTS_DIR/python
+    export PYTHONPATH=$DROID_PYTHON_PATH:$PYTHONPATH
+fi
+
 # @tool gt-sk
 function droid-sk()
 {
