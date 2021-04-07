@@ -601,7 +601,7 @@ function droid-list-all-installed-apks-sk()
         target_device=$1
     fi
 
-    adb -s ${target_device} shell pm list packages -f | sed "s/apk=/ /" | awk '{print $2}' | sk
+    adb -s ${target_device} shell pm list packages -f | sed "s/apk=/ /" | awk '{print $2}' | default-fuzzy-finder
 }
 
 function droid-app()
@@ -640,8 +640,8 @@ function droid-app-open-activity()
 {
     target_device=$(droid-device)
     if [ -z $1 ]; then
-        target_pkg=$(adb -s ${target_device} shell pm list packages -f | sed "s/apk=/ /" | awk '{print $2}' | sk )
-        target_activity=$(adb shell dumpsys package | grep -i "$target_pkg" | grep Activity | sk)
+        target_pkg=$(adb -s ${target_device} shell pm list packages -f | sed "s/apk=/ /" | awk '{print $2}' | default-fuzzy-finder )
+        target_activity=$(adb shell dumpsys package | grep -i "$target_pkg" | grep Activity | default-fuzzy-finder)
     else
         target_activity=$1
     fi
