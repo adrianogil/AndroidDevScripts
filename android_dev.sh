@@ -309,10 +309,18 @@ function droid-device()
     if [[ $(adb devices | wc -l) -le 3 ]]; then
         selected_device=$(adb devices | tail -n +2 | awk '{print $1}')
     else
-        selected_device=$(adb devices | tail -n +2 | awk '{print $1}' | sk)
+        selected_device=$(adb devices | tail -n +2 | awk '{print $1}' | default-fuzzy-finder)
     fi
     echo ${selected_device} | tr '\n' ' ' | pbcopy
     echo ${selected_device}
+}
+
+# droidtool droid-shell
+# @tool droid-shell - Open shell
+function droid-shell()
+{
+    target_device=$(droid-device)
+    adb -s ${target_device} shell
 }
 
 # droidtool droid-cat
