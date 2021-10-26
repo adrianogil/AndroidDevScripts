@@ -5,6 +5,7 @@
 
 source ${ANDROID_DEV_SCRIPTS_DIR}/android_dev.sh
 source ${ANDROID_DEV_SCRIPTS_DIR}/vr_android_dev.sh
+source ${ANDROID_DEV_SCRIPTS_DIR}/dev/logs.sh
 
 
 if [ -z "$DROID_PYTHON_PATH" ]
