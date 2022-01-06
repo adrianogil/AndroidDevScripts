@@ -169,6 +169,11 @@ function apks()
 
 }
 
+function apks-size()
+{
+    apks | xargs -I {} du -sh {}
+}
+
 function aars()
 {
     if [[ $1 == "-d" ]]; then
