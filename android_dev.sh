@@ -5,7 +5,7 @@ function ik()
 {
     echo 'Searching for APK files ...'
 
-    apk_file=$(find . -name '*.apk' | head -1)
+    apk_file=$(find . -name '*.apk' | default-fuzzy-finder)
 
     if [ -z $apk_file ]; then
         echo 'No APK Found!'
@@ -21,14 +21,17 @@ function ikc()
     if [ -z $1 ]; then
         if hash gfind 2>/dev/null; then
             # gfind cab be installed by "brew install findutils"
-            apk_file=$(gfind . -name '*.apk' -type f -printf "%-.22T+ %M %n %-8u %-8g %8s %Tx %.8TX %p\n" | sort | awk '{print $9}' | tail -1)
+            apk_file=$(gfind . -name '*.apk' -type f -printf "%-.22T+ %M %n %-8u %-8g %8s %Tx %.8TX %p\n" | sort | awk '{print $9}' | default-fuzzy-finder)
         else
-            apk_file=$(find . -name '*.apk' | head -1)
+            apk_file=$(find . -name '*.apk' | default-fuzzy-finder)
         fi
     else
         apk_file=$1
     fi
-    device_model=$(adb shell getprop ro.product.model)
+
+    target_device=$(droid-device)
+
+    device_model=$(adb -s ${target_device} shell getprop ro.product.model)
     echo "Installing APK "$apk_file" in device "$device_model
     apk_date=$(date -r $apk_file)
     package_name=$(get_package_name_from_apk $apk_file)
@@ -41,12 +44,12 @@ function ikc()
         echo "Last build time was "$ANDROID_IKC_LAST_BUILD_TIME
     fi
     export ANDROID_IKC_LAST_BUILD_TIME=$apk_date
-    python2 ${ANDROID_DEV_SCRIPTS_DIR}/python/apks/smart_install.py ${package_name} $(abspath $apk_file)
+    python3 ${ANDROID_DEV_SCRIPTS_DIR}/python/apks/smart_install.py ${package_name} $(abspath $apk_file) ${target_device}
     # adb install -r $apk_file
     echo "Clear logcat"
-    adb logcat -c
+    adb -s ${target_device} logcat -c
     echo "Augment logcat buffer to 64MB"
-    adb logcat -G 64M
+    adb  -s ${target_device} logcat -G 64M
     echo "Launch Activity from APK "$apk_file
     launch_from_apk $apk_file
 
@@ -111,20 +114,22 @@ function launch_from_apk()
         apk_file=$(find . -name '*.apk' | head -1)
     fi
 
+    target_device=$2
+
     echo "Let's launch Activity from "$apk_file
 
     pkg_name=$(get_package_name_from_apk $apk_file)
 
     echo "Package "$pkg_name
 
-    launch_package $pkg_name
+    launch_package $pkg_name ${target_device}
 }
 alias droid-apk-launch="launch_from_apk"
 
 # Launch Application from package name
 function launch_package()
 {
-    adb shell monkey -p $1 -c android.intent.category.LAUNCHER 1
+    adb -s $2 shell monkey -p $1 -c android.intent.category.LAUNCHER 1
 }
 
 function droid-launch-app()

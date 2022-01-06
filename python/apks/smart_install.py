@@ -4,16 +4,26 @@ import subprocess, sys, traceback
 package_name = sys.argv[1]
 apk_path = sys.argv[2]
 
+device_name = None
+
+if len(sys.argv) >= 4:
+    device_name = sys.argv[3]
+
 total_flags = len(sys.argv) - 3
 flags = []
-for i in xrange(0, total_flags):
+for i in range(0, total_flags):
     flags.append(sys.argv[3+i])
 
 # print("smart_install - apk_path " + apk_path)
 
 def install_apk(apk_path, only_install_mode=False):
     print('Installing APK ' + apk_path)
-    apk_install_cmd = "adb install "
+    
+    apk_install_cmd = "adb "
+    if device_name:
+        apk_install_cmd += " -s " + device_name
+    apk_install_cmd += " install "
+
     if not only_install_mode:
         apk_install_cmd += '-r '
     apk_install_cmd += apk_path
@@ -38,15 +48,13 @@ except subprocess.CalledProcessError as e:
         #     print('uninstall')
         # else:
         #     print('do nothing')
-        apk_uninstall_cmd    = "adb uninstall " + package_name
+        apk_uninstall_cmd = "adb "
+        if device_name:
+            apk_uninstall_cmd += " -s " + device_name
+        apk_uninstall_cmd += " uninstall " + package_name
         apk_uninstall_output = subprocess.check_output(apk_uninstall_cmd, shell=True)
         apk_uninstall_output = apk_uninstall_output.strip().split('\n')
         apk_uninstall_output = apk_uninstall_output[0].strip()
         print(apk_uninstall_output)
 
         install_apk(apk_path)
-
-
-
-
-
