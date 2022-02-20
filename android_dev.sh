@@ -51,7 +51,7 @@ function ikc()
     echo "Augment logcat buffer to 64MB"
     adb  -s ${target_device} logcat -G 64M
     echo "Launch Activity from APK "$apk_file
-    launch_from_apk $apk_file
+    launch_from_apk $apk_file ${target_device}
 
 }
 
