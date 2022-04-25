@@ -87,7 +87,8 @@ class AndroidLogcatObserver:
 
         self.process = subprocess.Popen(cmds,
                                         stdout=subprocess.PIPE,
-                                        encoding="utf-8")
+                                        encoding="utf-8",
+                                        universal_newlines=True)
 
         # Launch the asynchronous readers of the process' stdout.
         stdout_queue = queue.Queue()
