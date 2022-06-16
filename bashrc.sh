@@ -3,8 +3,8 @@
 # export ANDROID_DEV_SCRIPTS_DIR=<PATH>
 # source ${ANDROID_DEV_SCRIPTS_DIR}/bashrc.sh
 
-source ${ANDROID_DEV_SCRIPTS_DIR}/android_dev.sh
-source ${ANDROID_DEV_SCRIPTS_DIR}/vr_android_dev.sh
+source ${ANDROID_DEV_SCRIPTS_DIR}/dev/android_dev.sh
+source ${ANDROID_DEV_SCRIPTS_DIR}/dev/vr_android_dev.sh
 source ${ANDROID_DEV_SCRIPTS_DIR}/dev/logs.sh
 
 
@@ -14,11 +14,11 @@ then
     export PYTHONPATH=$DROID_PYTHON_PATH:$PYTHONPATH
 fi
 
-# @tool gt-sk
-function droid-sk()
+# @tool droid-fz
+function droid-fz()
 {
-    droid_action=$(cat ${ANDROID_DEV_SCRIPTS_DIR}/*android*.sh | grep '# droidtool' | cut -c12- | sk)
+    droid_action=$(cat ${ANDROID_DEV_SCRIPTS_DIR}/dev/*android*.sh | grep '# droidtool' | cut -c12- | sk)
 
     eval ${droid_action}
 }
-alias d="droid-sk"
+alias d="droid-fz"
