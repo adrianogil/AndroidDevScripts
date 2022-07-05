@@ -1,4 +1,3 @@
-# python2
 import subprocess, sys, traceback
 
 package_name = sys.argv[1]
@@ -9,29 +8,42 @@ device_name = None
 if len(sys.argv) >= 4:
     device_name = sys.argv[3]
 
-total_flags = len(sys.argv) - 3
+total_flags = len(sys.argv) - 4
 flags = []
 for i in range(0, total_flags):
-    flags.append(sys.argv[3+i])
+    flags.append(sys.argv[4+i])
 
 # print("smart_install - apk_path " + apk_path)
+
+
+def get_adb_cmd():
+    apk_install_cmd = "adb "
+    if device_name:
+        apk_install_cmd += " -s " + device_name
+    return apk_install_cmd
+
+
+def run_adb_cmd(cmd):
+    cmd = get_adb_cmd() + " " + cmd
+    cmd_output = subprocess.check_output(cmd, shell=True, stderr=subprocess.STDOUT)
+    cmd_output = cmd_output.strip().split('\n')
+    cmd_output = cmd_output[0].strip()
+
+    return cmd_output
+
 
 def install_apk(apk_path, only_install_mode=False):
     print('Installing APK ' + apk_path)
     
-    apk_install_cmd = "adb "
-    if device_name:
-        apk_install_cmd += " -s " + device_name
-    apk_install_cmd += " install "
+    apk_install_cmd = " install "å
 
     if not only_install_mode:
         apk_install_cmd += '-r '
     apk_install_cmd += apk_path
-
-    apk_install_output = subprocess.check_output(apk_install_cmd, shell=True, stderr=subprocess.STDOUT)
-    apk_install_output = apk_install_output.strip().split('\n')
-    apk_install_output = apk_install_output[0].strip()
+    apk_install_output = run_adb_cmd(apk_install_cmd)
+    
     print(apk_install_output)
+
 
 try:
     only_install_mode_flag = '-f' in flags
@@ -43,18 +55,9 @@ except subprocess.CalledProcessError as e:
         'INSTALL_FAILED_VERSION_DOWNGRADE' in error_output or \
         'INSTALL_FAILED_UPDATE_INCOMPATIBLE' in error_output:
         print("Let's uninstall current version from device!")
-        # response = raw_input("Would you like to uninstall current version from device? (y) ")
-        # if response == '\n' or response == 'y':
-        #     print('uninstall')
-        # else:
-        #     print('do nothing')
-        apk_uninstall_cmd = "adb "
-        if device_name:
-            apk_uninstall_cmd += " -s " + device_name
-        apk_uninstall_cmd += " uninstall " + package_name
-        apk_uninstall_output = subprocess.check_output(apk_uninstall_cmd, shell=True)
-        apk_uninstall_output = apk_uninstall_output.strip().split('\n')
-        apk_uninstall_output = apk_uninstall_output[0].strip()
+        apk_uninstall_cmd = " uninstall " + package_name
+
+        apk_uninstall_output = run_adb_cmd(apk_uninstall_cmd)
         print(apk_uninstall_output)
 
         install_apk(apk_path)
