@@ -35,18 +35,30 @@ def run_adb_cmd(cmd):
 def install_apk(apk_path, only_install_mode=False):
     print('Installing APK ' + apk_path)
     
-    apk_install_cmd = " install "å
+    apk_install_cmd = " install "
 
     if not only_install_mode:
         apk_install_cmd += '-r '
-    apk_install_cmd += apk_path
+    apk_install_cmd += '"%"' % (apk_path,)
     apk_install_output = run_adb_cmd(apk_install_cmd)
     
     print(apk_install_output)
 
 
+def uninstall_app(package_name):
+    print('Uninstalling package ' + package_name)
+    
+    apk_uninstall_cmd = ' uninstall "%"' % (package_name,)
+    apk_uninstall_output = run_adb_cmd(apk_uninstall_cmd)
+    
+    print(apk_uninstall_output)
+
+
 try:
-    only_install_mode_flag = '-f' in flags
+    uninstall_first = '--full-reinstall' in flags or '-fr'
+    if uninstall_first:
+        uninstall_app(package_name)
+    only_install_mode_flag = '-f' in flags or '--reinstall' in flags
     install_apk(apk_path, only_install_mode=only_install_mode_flag)
 except subprocess.CalledProcessError as e:
     error_output = e.output.decode()
@@ -55,9 +67,9 @@ except subprocess.CalledProcessError as e:
         'INSTALL_FAILED_VERSION_DOWNGRADE' in error_output or \
         'INSTALL_FAILED_UPDATE_INCOMPATIBLE' in error_output:
         print("Let's uninstall current version from device!")
-        apk_uninstall_cmd = " uninstall " + package_name
-
-        apk_uninstall_output = run_adb_cmd(apk_uninstall_cmd)
-        print(apk_uninstall_output)
-
+        try:
+            uninstall_app(package_name)
+        except subprocess.CalledProcessError as e2:
+            error_output = e2.output.decode()
+            print("Got error: " + error_output)
         install_apk(apk_path)

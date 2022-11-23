@@ -15,8 +15,8 @@ function ik()
     fi
 }
 
-# Install Android APK
-function ikc()
+# droidtool droid-install-apk: install apk
+function droid-install-apk()
 {
     if [ -z $1 ]; then
         if hash gfind 2>/dev/null; then
@@ -54,6 +54,7 @@ function ikc()
     launch_from_apk $apk_file ${target_device}
 
 }
+alias ikc="droid-install-apk"
 
 function droid-apk-info()
 {
