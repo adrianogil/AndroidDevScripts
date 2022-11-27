@@ -490,7 +490,7 @@ function droid-list-all-installed-apks()
     adb -s ${target_device} shell pm list packages -f | sed "s/apk=/ /" | awk '{print $2}'
 }
 
-function droid-list-all-installed-apks-sk()
+function droid-list-all-installed-apks-fz()
 {
     if [ -z $1 ]; then
         target_device=$(droid-device)
@@ -525,7 +525,7 @@ function droid-app()
 function droid-app-detail()
 {
     if [ -z $1 ]; then
-        target_package=$(droid-list-all-installed-apks-sk)
+        target_package=$(droid-list-all-installed-apks-fz)
     else
         target_package=$1
     fi
@@ -578,7 +578,7 @@ function droid-app-list-permissions()
     fi
 
     if [ -z $1 ]; then
-        package_name=$(droid-list-all-installed-apks-sk ${target_device})
+        package_name=$(droid-list-all-installed-apks-fz ${target_device})
     else
         package_name=$1
     fi
