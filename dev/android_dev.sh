@@ -237,9 +237,9 @@ function droid-scrcpy()
     target_device=$(droid-device)
     
     if [ -z $1 ]; then
-        scrcpy -s ${target_device}
+        screen -S scrcpy-$target_device -dm scrcpy -s ${target_device}
     else
-        scrcpy -s ${target_device} -p $1
+        screen -S scrcpy-$target_device -dm scrcpy -s ${target_device} -p $1
     fi    
 }
 
@@ -282,7 +282,7 @@ alias droid-get-ipaddress-wlan='python2 '$ANDROID_DEV_SCRIPTS_DIR'/python/net/wl
 
 alias droid-get-processor-arch='adb shell getprop ro.product.cpu.abi'
 
-alias droid-get-gpu-info='adb shell dumpsys | grep GLES'
+alias droid-get-gpu-info='adb shell dumpsys SurfaceFlinger | grep GLES'
 
 # From https://github.com/ender503/Awesome-ADB-toolkits/blob/master/environment
 alias droid-home="adb shell am start -c android.intent.category.HOME -a android.intent.action.MAIN"
