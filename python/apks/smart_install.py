@@ -39,7 +39,7 @@ def install_apk(apk_path, only_install_mode=False):
 
     if not only_install_mode:
         apk_install_cmd += '-r '
-    apk_install_cmd += '"%"' % (apk_path,)
+    apk_install_cmd += '"%s"' % (apk_path,)
     apk_install_output = run_adb_cmd(apk_install_cmd)
     
     print(apk_install_output)
@@ -48,16 +48,16 @@ def install_apk(apk_path, only_install_mode=False):
 def uninstall_app(package_name):
     print('Uninstalling package ' + package_name)
     
-    apk_uninstall_cmd = ' uninstall "%"' % (package_name,)
+    apk_uninstall_cmd = ' uninstall "%s"' % (package_name,)
     apk_uninstall_output = run_adb_cmd(apk_uninstall_cmd)
     
     print(apk_uninstall_output)
 
 
 try:
-    uninstall_first = '--full-reinstall' in flags or '-fr'
-    if uninstall_first:
-        uninstall_app(package_name)
+    # uninstall_first = '--full-reinstall' in flags or '-fr'
+    # if uninstall_first:
+    #     uninstall_app(package_name)
     only_install_mode_flag = '-f' in flags or '--reinstall' in flags
     install_apk(apk_path, only_install_mode=only_install_mode_flag)
 except subprocess.CalledProcessError as e:
