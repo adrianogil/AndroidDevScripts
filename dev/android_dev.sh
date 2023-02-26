@@ -1,5 +1,7 @@
 alias droid-bkp-apks='python2 $ANDROID_DEV_SCRIPTS_DIR/python/apks/backup_apks.py'
 
+alias droid-device-save-full-info="python3 -m droid.device.savefullinfo"
+
 # Install Android APK
 function ik()
 {
