@@ -17,7 +17,7 @@ fi
 # @tool droid-fz
 function droid-fz()
 {
-    droid_action=$(cat ${ANDROID_DEV_SCRIPTS_DIR}/dev/*android*.sh | grep '# droidtool' | cut -c12- | sk)
+    droid_action=$(cat ${ANDROID_DEV_SCRIPTS_DIR}/dev/*android*.sh | grep '# droidtool' | cut -c12- | default-fuzzy-finder | tr ':' ' ' | awk '{print $1}')
 
     eval ${droid_action}
 }

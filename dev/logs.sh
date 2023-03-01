@@ -1,7 +1,23 @@
+# droidtool droid-logcat: Custom logcat search
 function droid-logcat()
 {
     target_string=$1
     python3 -m droid.logcat.logcatobserver $1
+}
+
+# droidtool droid-cat: Show logcat
+function droid-cat()
+{
+    target_device=$(droid-device)
+    adb -s ${target_device} logcat
+}
+
+# droidtool droid-neko: Custom view of logcat
+function droid-neko()
+{
+    target_device=$(droid-device)
+
+    python3 $ANDROID_DEV_SCRIPTS_DIR/python/log/droidneko.py --device ${target_device}
 }
 
 # Android logcat

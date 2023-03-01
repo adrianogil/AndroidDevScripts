@@ -1,6 +1,12 @@
 alias droid-bkp-apks='python2 $ANDROID_DEV_SCRIPTS_DIR/python/apks/backup_apks.py'
 
-alias droid-device-save-full-info="python3 -m droid.device.savefullinfo"
+
+# droidtool droid-device-save-full-info: Save device info (packages, version, model, ...) in a JSON file
+function droid-device-save-full-info() 
+{
+    python3 -m droid.device.savefullinfo
+}
+
 
 # Install Android APK
 function ik()
@@ -186,15 +192,14 @@ function aars()
     fi
 }
 
-# droidtool droid
+# droidtool droid: List Android devices
 # @tool droid - List Android devices
 function droid()
 {
     adb devices
 }
 
-# droidtool droid-device
-# @tool droid-device - Pick an available Android device
+# droidtool droid-device: Pick an available Android device
 function droid-device()
 {
     if [[ $(adb devices | wc -l) -le 3 ]]; then
@@ -206,34 +211,15 @@ function droid-device()
     echo ${selected_device}
 }
 
-# droidtool droid-shell
-# @tool droid-shell - Open shell
+# droidtool droid-shell: Open shell
 function droid-shell()
 {
     target_device=$(droid-device)
     adb -s ${target_device} shell
 }
 
-# droidtool droid-cat
-# @tool droid-cat - Show logcat
-function droid-cat()
-{
-    target_device=$(droid-device)
-    adb -s ${target_device} logcat
-}
 
-# droidtool droid-neko
-# @tool droid-neko - Custom view of logcat
-function droid-neko()
-{
-    target_device=$(droid-device)
-
-    python3 $ANDROID_DEV_SCRIPTS_DIR/python/log/droidneko.py --device ${target_device}
-}
-
-
-# droidtool droid-scrcpy
-# @tool droid-scrcpy - Open a scrcpy instance with an available Android device
+# droidtool droid-scrcpy: Open a scrcpy instance with an available Android device
 function droid-scrcpy()
 {
     target_device=$(droid-device)
@@ -245,6 +231,7 @@ function droid-scrcpy()
     fi    
 }
 
+# droidtool droid-playstore-install: install a package from playstore 
 function droid-playstore-install()
 {
     package=$1
@@ -591,6 +578,7 @@ function droid-app-list-permissions()
     adb -s ${target_device} shell dumpsys package ${package_name} | grep "granted="
 }
 
+# droidtool droid-device-info: Print device info (model, sdk, kernel version)
 function droid-device-info()
 {
     device_model=$(adb shell getprop ro.product.model)
