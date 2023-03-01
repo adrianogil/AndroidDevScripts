@@ -202,7 +202,7 @@ function droid-device()
     else
         selected_device=$(adb devices | tail -n +2 | awk '{print $1}' | default-fuzzy-finder)
     fi
-    echo ${selected_device} | tr '\n' ' ' | pbcopy
+    echo ${selected_device} | tr '\n' ' ' | copy-text-to-clipboard
     echo ${selected_device}
 }
 
