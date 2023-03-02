@@ -530,15 +530,17 @@ function droid-app-get-current-activity()
         target_device=$1
     fi
 
-    adb -s ${target_device} shell dumpsys activity a . | grep -E 'mResumedActivity' | cut -d ' ' -f 8
+    echo $(adb -s ${target_device} shell dumpsys activity a . | grep -E 'mResumedActivity' | cut -d ' ' -f 8)
 }
 
+
+# droidtool droid-app-open-activity: Open an activity
 function droid-app-open-activity()
 {
     target_device=$(droid-device)
     if [ -z $1 ]; then
         target_pkg=$(adb -s ${target_device} shell pm list packages -f | sed "s/apk=/ /" | awk '{print $2}' | default-fuzzy-finder )
-        target_activity=$(adb shell dumpsys package | grep -i "$target_pkg" | grep Activity | default-fuzzy-finder)
+        target_activity=$(adb shell dumpsys package | grep -i "$target_pkg" | grep Activity | awk '{print $2}' | default-fuzzy-finder)
     else
         target_activity=$1
     fi
