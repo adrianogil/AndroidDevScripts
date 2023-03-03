@@ -751,3 +751,16 @@ function kill-all-adb-instances()
 {
     ps aux | grep "adb -L" |  grep -v "grep" | awk '{print $2}' | xargs -I {} sudo kill -9 {}
 }
+
+
+# droidtool droid-reboot: reboot device
+function droid-reboot()
+{
+    if [ -z $1 ]; then
+        target_device=$(droid-device)
+    else
+        target_device=$1
+    fi
+
+    adb -s ${target_device} reboot
+}
