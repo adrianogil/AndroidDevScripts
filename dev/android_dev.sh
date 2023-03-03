@@ -522,6 +522,7 @@ function droid-app-detail()
     python3 -m droid.app.appdetails ${target_package}
 }
 
+# droidtool droid-app-get-current-activity: Get current open activity
 function droid-app-get-current-activity()
 {
     if [ -z $1 ]; then
@@ -530,7 +531,7 @@ function droid-app-get-current-activity()
         target_device=$1
     fi
 
-    echo $(adb -s ${target_device} shell dumpsys activity a . | grep -E 'mResumedActivity' | cut -d ' ' -f 8)
+    python3 -m droid.app.getcurrentactivity ${target_device}
 }
 
 
