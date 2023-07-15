@@ -46,7 +46,7 @@ def install_apk(apk_path, only_install_mode=False):
 
 
 def uninstall_app(package_name):
-    print('Uninstalling package ' + package_name)
+    print(f"Uninstalling package {package_name}")
     
     apk_uninstall_cmd = ' uninstall "%s"' % (package_name,)
     apk_uninstall_output = run_adb_cmd(apk_uninstall_cmd)
@@ -54,12 +54,15 @@ def uninstall_app(package_name):
     print(apk_uninstall_output)
 
 
-try:
-    # uninstall_first = '--full-reinstall' in flags or '-fr'
-    # if uninstall_first:
-    #     uninstall_app(package_name)
+def install_app(package_name):
+    print(f"Installing app {package_name}")
     only_install_mode_flag = '-f' in flags or '--reinstall' in flags
     install_apk(apk_path, only_install_mode=only_install_mode_flag)
+
+
+try:
+    install_app(package_name)
+    
 except subprocess.CalledProcessError as e:
     error_output = e.output.decode()
     print("Got error: " + error_output)
@@ -69,7 +72,8 @@ except subprocess.CalledProcessError as e:
         print("Let's uninstall current version from device!")
         try:
             uninstall_app(package_name)
+            install_app(package_name)
         except subprocess.CalledProcessError as e2:
             error_output = e2.output.decode()
             print("Got error: " + error_output)
-        install_apk(apk_path)
+

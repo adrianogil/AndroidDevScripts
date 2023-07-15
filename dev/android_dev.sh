@@ -53,7 +53,8 @@ function droid-install-apk()
     fi
     export ANDROID_IKC_LAST_BUILD_TIME=$apk_date
     python3 ${ANDROID_DEV_SCRIPTS_DIR}/python/apks/smart_install.py ${package_name} $(abspath $apk_file) ${target_device}
-    # adb install -r $apk_file
+    
+
     echo "Clear logcat"
     adb -s ${target_device} logcat -c
     echo "Augment logcat buffer to 64MB"
