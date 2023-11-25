@@ -9,6 +9,13 @@ import json
 
 
 def get_full_device_info():
+    """
+    Retrieves the full device information including device model, version, kernel, Android API, Android SDK,
+    processor architecture, GPU info, and installed apps.
+
+    Returns:
+        dict: A dictionary containing the device information and installed apps.
+    """
     device_model = run_cmd("adb shell getprop ro.product.model")
     device_version = run_cmd("adb shell getprop ro.bootloader")
     device_kernel = run_cmd("adb shell cat /proc/version")
@@ -20,8 +27,11 @@ def get_full_device_info():
     apps_data = {}
     app_list = get_list_installed_apps()
     for app in app_list:
-        app_details = get_app_details(app)
-        apps_data[app] = app_details
+        try:
+            app_details = get_app_details(app)
+            apps_data[app] = app_details
+        except:
+            print("Error getting app details for %s" % app)
     return {
         "device": {
             "model": device_model,
