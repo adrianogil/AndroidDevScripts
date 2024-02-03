@@ -224,15 +224,15 @@ function droid-shell()
 function droid-scrcpy()
 {
     target_device=$(droid-device)
-    
+
     if [ -z $1 ]; then
         screen -S scrcpy-$target_device -dm scrcpy -s ${target_device}
     else
         screen -S scrcpy-$target_device -dm scrcpy -s ${target_device} -p $1
-    fi    
+    fi
 }
 
-# droidtool droid-playstore-install: install a package from playstore 
+# droidtool droid-playstore-install: install a package from playstore
 function droid-playstore-install()
 {
     package=$1
@@ -583,18 +583,44 @@ function droid-app-list-permissions()
 }
 
 # droidtool droid-device-info: Print device info (model, sdk, kernel version)
-function droid-device-info()
-{
-    device_model=$(adb shell getprop ro.product.model)
-    device_version=$(adb shell getprop ro.bootloader)
-    kernel_version=$(droid-kernelversion)
-    droid_api=$(adb shell getprop ro.build.version.release)
-    droid_sdk=$(adb shell getprop ro.build.version.sdk)
+function droid-device-info() {
+    # Prints detailed information about the connected Android device.
+    # Usage: droid-device-info [device_id]
 
-    echo "Current device is a "$device_model
-    echo "Device version: "${device_version}
-    echo "Android API: "$droid_api" and Android SDK "$droid_sdk
-    echo "Kernel version: "$kernel_version
+    local target_device=${1:-$(droid-device)}
+
+    # Check if a target device is specified or connected
+    if [[ -z "$target_device" ]]; then
+        echo "Error: No target device specified or/and no device connected."
+        return 1
+    fi
+
+    # Collect device information
+    local device_model=$(adb -s "$target_device" shell getprop ro.product.model 2>/dev/null)
+    local device_bootloader=$(adb -s "$target_device" shell getprop ro.bootloader 2>/dev/null)
+    local kernel_version=$(adb -s "$target_device" shell cat /proc/version 2>/dev/null)
+    local android_release=$(adb -s "$target_device" shell getprop ro.build.version.release 2>/dev/null)
+    local android_sdk=$(adb -s "$target_device" shell getprop ro.build.version.sdk 2>/dev/null)
+    local build_number=$(adb -s "$target_device" shell getprop ro.build.display.id 2>/dev/null)
+    local battery_level=$(adb -s "$target_device" shell dumpsys battery | grep level | awk '{ print $2 }' 2>/dev/null)
+    local storage_info=$(adb -s "$target_device" shell df /data | awk 'NR==2 {print $3/1024/1024 "/" $2/1024/1024 " GB used (" $5 " used)"}' 2>/dev/null)
+    local security_patch=$(adb -s "$target_device" shell getprop ro.build.version.security_patch 2>/dev/null)
+
+    # Check if device information was successfully retrieved
+    if [[ -z "$device_model" ]]; then
+        echo "Error: Failed to retrieve device information. Ensure the device is connected and debuggable."
+        return 2
+    fi
+
+    # Display collected device information
+    echo "Device Model: $device_model"
+    echo "Bootloader Version: $device_bootloader"
+    echo "Android Version: $android_release (SDK: $android_sdk)"
+    echo "Kernel Version: $kernel_version"
+    echo "Build Number: $build_number"
+    echo "Battery Level: $battery_level%"
+    echo "Storage Info: $storage_info"
+    echo "Security Patch Level: $security_patch"
 }
 
 function droid-recents-tasks()
