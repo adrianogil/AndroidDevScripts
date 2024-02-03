@@ -597,6 +597,7 @@ function droid-device-info() {
 
     # Collect device information
     local device_model=$(adb -s "$target_device" shell getprop ro.product.model 2>/dev/null)
+    local device_oem=$(adb -s "$target_device" shell getprop ro.product.brand 2>/dev/null)
     local device_bootloader=$(adb -s "$target_device" shell getprop ro.bootloader 2>/dev/null)
     local kernel_version=$(adb -s "$target_device" shell cat /proc/version 2>/dev/null)
     local android_release=$(adb -s "$target_device" shell getprop ro.build.version.release 2>/dev/null)
@@ -613,6 +614,7 @@ function droid-device-info() {
     fi
 
     # Display collected device information
+    echo "OEM: $device_oem"
     echo "Device Model: $device_model"
     echo "Bootloader Version: $device_bootloader"
     echo "Android Version: $android_release (SDK: $android_sdk)"
