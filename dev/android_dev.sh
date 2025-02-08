@@ -2,7 +2,7 @@ alias droid-bkp-apks='python2 $ANDROID_DEV_SCRIPTS_DIR/python/apks/backup_apks.p
 
 
 # droidtool droid-device-save-full-info: Save device info (packages, version, model, ...) in a JSON file
-function droid-device-save-full-info() 
+function droid-device-save-full-info()
 {
     python3 -m droid.device.savefullinfo
 }
@@ -53,7 +53,7 @@ function droid-install-apk()
     fi
     export ANDROID_IKC_LAST_BUILD_TIME=$apk_date
     python3 ${ANDROID_DEV_SCRIPTS_DIR}/python/apks/smart_install.py ${package_name} $(abspath $apk_file) ${target_device}
-    
+
 
     echo "Clear logcat"
     adb -s ${target_device} logcat -c
@@ -274,18 +274,39 @@ alias droid-get-processor-arch='adb shell getprop ro.product.cpu.abi'
 
 alias droid-get-gpu-info='adb shell dumpsys SurfaceFlinger | grep GLES'
 
+
+# droidtool droid-home: Go to home screen
 # From https://github.com/ender503/Awesome-ADB-toolkits/blob/master/environment
 alias droid-home="adb shell am start -c android.intent.category.HOME -a android.intent.action.MAIN"
+
+# droidtool droid-settings: Open settings
 alias droid-settings="adb shell am start -a android.settings.SETTINGS"
+
+# droidtool droid-developer-options: Open developer options
 alias droid-developer-options="adb shell am start -n com.android.settings/.DevelopmentSettings"
 
+# droidtool droid-keyevent-back: Send back key event
 alias droid-keyevent-back="adb shell input keyevent 4"
+
+# droidtool droid-keyevent-home: Send home key event
 alias droid-keyevent-home="adb shell input keyevent 3"
+
+# droidtool droid-keyevent-screen-turnoff: Send screen turn off key event
 alias droid-keyevent-screen-turnoff="adb shell input keyevent 26"
+
+# droidtool droid-keyevent-camera: Send camera key event
 alias droid-keyevent-camera="adb shell input keyevent 27"
+
+# droidtool droid-keyevent-play: Send play key event
 alias droid-keyevent-play="adb shell input keyevent 126"
+
+# droidtool droid-keyevent-pause: Send pause key event
 alias droid-keyevent-pause="adb shell input keyevent 127"
 
+# droidtool droid-keyevent-stop: Send stop key event
+alias droid-keyevent-stop="adb shell input keyevent 86"
+
+# droidtool droid-time: Get device time
 alias droid-time="adb shell date"
 
 alias droid-get-free-ram="adb shell dumpsys meminfo | grep \"Free RAM\""
