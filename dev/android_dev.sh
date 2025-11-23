@@ -24,45 +24,90 @@ function ik()
 }
 
 # droidtool droid-install-apk: install apk
-function droid-install-apk()
-{
-    if [ -z $1 ]; then
-        if hash gfind 2>/dev/null; then
-            # gfind cab be installed by "brew install findutils"
-            apk_file=$(gfind . -name '*.apk' -type f -printf "%-.22T+ %M %n %-8u %-8g %8s %Tx %.8TX %p\n" | sort | awk '{print $9}' | default-fuzzy-finder)
+function droid-install-apk() {
+    local apk_file target_device device_model apk_date package_name
+    local extra_args=()
+
+    # 1) Choose APK: arg1 or fuzzy finder
+    if [[ -z "$1" ]]; then
+        if command -v gfind >/dev/null 2>&1; then
+            # gfind can be installed via "brew install findutils"
+            # Use mtime in seconds for stable sort, then strip it and keep the full path
+            apk_file=$(gfind . -name '*.apk' -type f -printf '%T@ %p\n' \
+                | sort -n \
+                | awk '{ $1=""; sub(/^ /,""); print }' \
+                | default-fuzzy-finder)
         else
-            apk_file=$(find . -name '*.apk' | default-fuzzy-finder)
+            apk_file=$(find . -name '*.apk' -type f | default-fuzzy-finder)
         fi
     else
         apk_file=$1
+        shift
+        extra_args=("$@")  # forward any extra flags to the Python script
     fi
 
+    if [[ -z "$apk_file" ]]; then
+        echo "No APK selected."
+        return 1
+    fi
+
+    if [[ ! -f "$apk_file" ]]; then
+        echo "APK not found: $apk_file" >&2
+        return 1
+    fi
+
+    # 2) Resolve target device
     target_device=$(droid-device)
-
-    device_model=$(adb -s ${target_device} shell getprop ro.product.model)
-    echo "Installing APK "$apk_file" in device "$device_model
-    apk_date=$(date -r $apk_file)
-    package_name=$(get_package_name_from_apk $apk_file)
-    echo " -> package name: "$package_name
-    echo " -> build size: "$(du -sh $apk_file | awk '{print $1}')
-    echo " -> build time: "$apk_date
-    if [ -z ${ANDROID_IKC_LAST_BUILD_TIME+x} ]; then
-        echo ""
-    else
-        echo "Last build time was "$ANDROID_IKC_LAST_BUILD_TIME
+    if [[ -z "$target_device" ]]; then
+        echo "No target device found." >&2
+        return 1
     fi
-    export ANDROID_IKC_LAST_BUILD_TIME=$apk_date
-    python3 ${ANDROID_DEV_SCRIPTS_DIR}/python/apks/smart_install.py ${package_name} $(abspath $apk_file) ${target_device}
 
+    device_model=$(adb -s "$target_device" shell getprop ro.product.model | tr -d '\r')
 
+    echo "Installing APK: $apk_file"
+    echo "Target device: $device_model ($target_device)"
+
+    # 3) Display metadata about the build
+    apk_date=$(date -r "$apk_file")
+    package_name=$(get_package_name_from_apk "$apk_file")
+
+    echo " -> package name: $package_name"
+    echo " -> build size: $(du -sh "$apk_file" | awk '{print $1}')"
+    echo " -> build time: $apk_date"
+
+    if [[ -n "${ANDROID_IKC_LAST_BUILD_TIME+x}" ]]; then
+        echo "Last build time was $ANDROID_IKC_LAST_BUILD_TIME"
+    fi
+    export ANDROID_IKC_LAST_BUILD_TIME="$apk_date"
+
+    # 4) Call the refactored Python installer
+    # smart_install.py now has CLI:
+    #   smart_install.py [options] package_name apk_path
+    # Options: -s / --device, -f / --fresh-install, --no-retry, ...
+    python3 "${ANDROID_DEV_SCRIPTS_DIR}/python/apks/smart_install.py" \
+        -s "$target_device" \
+        "${extra_args[@]}" \
+        "$package_name" \
+        "$(abspath "$apk_file")"
+
+    local python_exit=$?
+    if [[ $python_exit -ne 0 ]]; then
+        echo "smart_install.py failed with code $python_exit" >&2
+        return $python_exit
+    fi
+
+    # 5) Post-install: logcat handling and app launch
     echo "Clear logcat"
-    adb -s ${target_device} logcat -c
-    echo "Augment logcat buffer to 64MB"
-    adb  -s ${target_device} logcat -G 64M
-    echo "Launch Activity from APK "$apk_file
-    launch_from_apk $apk_file ${target_device}
+    adb -s "$target_device" logcat -c
 
+    echo "Augment logcat buffer to 64MB"
+    adb -s "$target_device" logcat -G 64M
+
+    echo "Launch Activity from APK $apk_file"
+    launch_from_apk "$apk_file" "$target_device"
 }
+
 alias ikc="droid-install-apk"
 
 function droid-apk-info()
