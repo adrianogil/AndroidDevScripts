@@ -859,3 +859,19 @@ function droid-reboot()
 
     adb -s ${target_device} reboot
 }
+
+# droidtool droid-app-run-as: run command as app user
+function droid-app-run-as()
+{
+    target_device=$1
+    if [ -z $target_device ]; then
+        target_device=$(droid-device)
+    fi
+
+    target_package_name=$2
+    if [ -z $target_package_name ]; then
+        # Select one
+        target_package_name=$(droid-list-all-installed-apks-fz)
+    fi
+    adb -s ${target_device} shell run-as ${target_package_name} "${@:3}"
+}
