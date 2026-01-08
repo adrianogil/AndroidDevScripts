@@ -875,3 +875,9 @@ function droid-app-run-as()
     fi
     adb -s ${target_device} shell run-as ${target_package_name} "${@:3}"
 }
+
+function droid-dev-select-gradle-task()
+{
+    gradle_task=$(./gradlew :app:tasks --all | grep -E '^[a-zA-Z].* - ' | awk '{print $1}' | default-fuzzy-finder)
+    echo $gradle_task
+}
