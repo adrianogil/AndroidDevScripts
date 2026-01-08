@@ -5,6 +5,39 @@ function droid-logcat()
     python3 -m droid.logcat.logcatobserver $1
 }
 
+# droidtool droid-logcat-app: Fuzzy search installed app and show logcat filtered for it
+function droid-logcat-app()
+{
+    local target_device package_name app_pid
+
+    target_device=$(droid-device)
+    if [[ -z "$target_device" ]]; then
+        echo "No target device found."
+        return 1
+    fi
+
+    if [[ -z "$1" ]]; then
+        package_name=$(adb -s "$target_device" shell pm list packages -f \
+            | sed "s/apk=/ /" | awk '{print $2}' | default-fuzzy-finder)
+    else
+        package_name=$1
+    fi
+
+    if [[ -z "$package_name" ]]; then
+        echo "No package selected."
+        return 1
+    fi
+
+    app_pid=$(adb -s "$target_device" shell pidof -s "$package_name" | tr -d '\r')
+    if [[ -n "$app_pid" ]]; then
+        echo "Tailing logcat for $package_name (pid $app_pid)"
+        adb -s "$target_device" logcat --pid="$app_pid"
+    else
+        echo "No running process for $package_name. Filtering logcat by package name."
+        adb -s "$target_device" logcat | grep --line-buffered -i "$package_name"
+    fi
+}
+
 # droidtool droid-cat: Show logcat
 function droid-cat()
 {
