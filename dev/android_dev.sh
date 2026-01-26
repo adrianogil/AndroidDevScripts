@@ -7,6 +7,45 @@ function droid-device-save-full-info()
     python3 -m droid.device.savefullinfo
 }
 
+# Open Android Studio for current directory or provided project dir
+function android-studio()
+{
+    local target_dir os_name studio_cmd
+
+    target_dir="$1"
+    if [[ -n "$target_dir" && ! -d "$target_dir" ]]; then
+        echo "Directory not found: $target_dir" >&2
+        return 1
+    fi
+
+    os_name="$(uname -s)"
+    if [[ "$os_name" == "Darwin" ]]; then
+        if [[ -n "$target_dir" ]]; then
+            open -a "Android Studio" "$target_dir"
+        else
+            open -a "Android Studio"
+        fi
+        return $?
+    fi
+
+    if command -v android-studio >/dev/null 2>&1; then
+        studio_cmd="android-studio"
+    elif [[ -n "$ANDROID_STUDIO_HOME" && -x "$ANDROID_STUDIO_HOME/bin/studio.sh" ]]; then
+        studio_cmd="$ANDROID_STUDIO_HOME/bin/studio.sh"
+    elif command -v studio.sh >/dev/null 2>&1; then
+        studio_cmd="studio.sh"
+    else
+        echo "Android Studio command not found. Add android-studio to PATH or set ANDROID_STUDIO_HOME." >&2
+        return 1
+    fi
+
+    if [[ -n "$target_dir" ]]; then
+        "$studio_cmd" "$target_dir" >/dev/null 2>&1 &
+    else
+        "$studio_cmd" >/dev/null 2>&1 &
+    fi
+}
+
 
 # Install Android APK
 function ik()
