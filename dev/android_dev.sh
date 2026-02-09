@@ -7,7 +7,7 @@ function droid-device-save-full-info()
     python3 -m droid.device.savefullinfo
 }
 
-# Open Android Studio for current directory or provided project dir
+# droidtool android-studio: Open Android Studio for current directory or provided project dir
 function android-studio()
 {
     local target_dir os_name studio_cmd
@@ -149,6 +149,7 @@ function droid-install-apk() {
 
 alias ikc="droid-install-apk"
 
+# droidtool droid-apk-info: Show APK package metadata via aapt
 function droid-apk-info()
 {
     aapt_tool=$(find $ANDROID_SDK/ -name 'aapt' | tail -1)
@@ -156,6 +157,7 @@ function droid-apk-info()
 }
 
 
+# droidtool droid-apk-permissions: Show APK permissions via aapt
 function apk_permissions()
 {
     if [ -z $1 ]; then
@@ -201,6 +203,7 @@ function uk()
     fi
 }
 
+# droidtool droid-apk-launch: Launch app from an APK (uses package name)
 function launch_from_apk()
 {
     apk_file=$1
@@ -226,6 +229,7 @@ function launch_package()
     adb -s $2 shell monkey -p $1 -c android.intent.category.LAUNCHER 1
 }
 
+# droidtool droid-launch-app: Launch app with explicit package/activity
 function droid-launch-app()
 {
     APK=$1
@@ -253,6 +257,7 @@ function ikl()
     fi
 }
 
+# droidtool droid-apks: List APKs in current tree
 function apks()
 {
     if [[ $1 == "-d" ]]; then
@@ -263,11 +268,13 @@ function apks()
 
 }
 
+# droidtool droid-apks-size: Show APK sizes
 function apks-size()
 {
     apks | xargs -I {} du -sh {}
 }
 
+# droidtool droid-aars: List AARs in current tree
 function aars()
 {
     if [[ $1 == "-d" ]]; then
@@ -406,6 +413,7 @@ alias droid-volume-down="adb shell input keyevent 25"
 alias droid-brightness-get="adb shell settings get system screen_brightness"
 alias droid-brightness-set="adb shell settings put system screen_brightness"
 
+# droidtool droid-app-activities: List activities for a package
 function droid-app-activities()
 {
     # Using command from
@@ -414,6 +422,7 @@ function droid-app-activities()
     adb shell dumpsys package | grep -i "$package_name" | grep Activity
 }
 
+# droidtool droid-open: Open a file on device based on extension
 function droid-open()
 {
     file=$1
@@ -431,6 +440,7 @@ function droid-open()
 
 alias dp="droid-open"
 
+# droidtool droid-open-text: Open a text file on device
 function droid-open-text()
 {
     echo "Open text file "$1"using DroidEdit Free"
@@ -448,6 +458,7 @@ function droid-open-text()
     fi
 }
 
+# droidtool droid-open-text-tmp: Open text file as tmp and track for reload
 function droid-open-text-as-tmp()
 {
     file=$1
@@ -478,6 +489,7 @@ function droid-open-text-as-tmp()
 }
 alias dp-txt='droid-open-text-as-tmp'
 
+# droidtool droid-open-text-reload: Reload original file from tmp copy
 function droid-reload-text-from-tmp()
 {
     file=$1
@@ -488,6 +500,7 @@ function droid-reload-text-from-tmp()
 alias dp-txt-reload='droid-reload-text-from-tmp'
 
 # Based on https://android.stackexchange.com/a/199496
+# droidtool droid-chrome-tabs: Save open Chrome tabs from device to a file
 function droid-get-open-chrome-tabs()
 {
     if [ -z "$1" ]
@@ -504,6 +517,7 @@ function droid-get-open-chrome-tabs()
     echo 'Saved'$session_size' open tabs from Android Google Chrome into file '$session_file
 }
 
+# droidtool droid-open-file: Open a file on device with default handler
 function droid-open-file()
 {
     echo "Open file "$1
